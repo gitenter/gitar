@@ -1,5 +1,7 @@
 # `gitar`
 
+[![CircleCI](https://circleci.com/gh/gitenter/gitar.svg?style=svg)](https://circleci.com/gh/gitenter/gitar)
+
 `gitar` is an object-orient API wrapper on top of JGit.
 
 ## Compile
