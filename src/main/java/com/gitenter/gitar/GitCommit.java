@@ -18,7 +18,7 @@ public class GitCommit {
 	 */
 	static final String EMPTY_SHA = "0000000000000000000000000000000000000000";
 	
-	private final Date time;
+	private final Date timestamp;
 	private final String message;
 	private final String sha;
 	
@@ -33,8 +33,8 @@ public class GitCommit {
 	 */
 	final RevCommit jGitCommit;
 	
-	public Date getTime() {
-		return time;
+	public Date getTimestamp() {
+		return timestamp;
 	}
 
 	public String getMessage() {
@@ -76,7 +76,7 @@ public class GitCommit {
 			 * 
 			 * So here need to do the transformation.
 			 */
-			this.time = new Date(jGitCommit.getCommitTime()*1000L);
+			this.timestamp = new Date(jGitCommit.getCommitTime()*1000L);
 			this.message = jGitCommit.getFullMessage();
 			
 			this.author = new GitAuthor(this, jGitCommit.getAuthorIdent());
@@ -87,7 +87,7 @@ public class GitCommit {
 	
 	GitCommit (GitRepository repository, RevCommit jGitCommit) {
 		
-		this.time = new Date(jGitCommit.getCommitTime()*1000L);
+		this.timestamp = new Date(jGitCommit.getCommitTime()*1000L);
 		this.message = jGitCommit.getFullMessage();
 		this.sha = jGitCommit.getName();
 		
