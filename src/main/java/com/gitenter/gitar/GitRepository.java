@@ -165,7 +165,7 @@ public abstract class GitRepository {
 			List<Ref> call = git.tagList().call();
 			for (Ref ref : call) {
 				if (tagName.equals(ref.getName().split("/")[2])) {
-					return new GitTag(this, tagName).downCasting();
+					return new GitTag(this, tagName, ref.getObjectId()).downCasting();
 				}
 			}
 		}
@@ -180,7 +180,7 @@ public abstract class GitRepository {
 			List<Ref> call = git.tagList().call();
 			for (Ref ref : call) {
 				String tagName = ref.getName().split("/")[2];
-				tags.add(new GitTag(this, tagName).downCasting());
+				tags.add(new GitTag(this, tagName, ref.getObjectId()).downCasting());
 			}
 		}
 		

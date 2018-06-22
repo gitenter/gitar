@@ -19,6 +19,11 @@ public class GitBareRepository extends GitRepository {
 	private GitBareRepository(File directory) throws IOException, GitAPIException {
 		super(directory);
 		
+		/*
+		 * TODO:
+		 * mkdir this directory if it is not exist.
+		 */
+		
 		if (isNormalRepository()) {
 			/*
 			 * TODO:

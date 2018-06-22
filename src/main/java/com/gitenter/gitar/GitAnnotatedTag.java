@@ -2,6 +2,7 @@ package com.gitenter.gitar;
 
 import java.io.IOException;
 
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevTag;
 
 public class GitAnnotatedTag extends GitTag {
@@ -12,8 +13,8 @@ public class GitAnnotatedTag extends GitTag {
 		return message;
 	}
 
-	GitAnnotatedTag(GitTag tag, RevTag jGitTag) throws IOException {
-		super(tag.commit.repository, tag.name);
+	GitAnnotatedTag(GitTag tag, RevTag jGitTag) throws IOException, GitAPIException {
+		super(tag.repository, tag.name, tag.objectId);
 		this.message = jGitTag.getFullMessage();
 	}
 
