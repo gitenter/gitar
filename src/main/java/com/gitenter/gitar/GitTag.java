@@ -49,6 +49,18 @@ public class GitTag {
 		public GitCommit getCommit() throws IOException, GitAPIException;
 	}
 	
+	/*
+	 * TODO:
+	 * Consider rewrite the boilerplate code with "LazyInitializer", but
+	 * that doesn't support customized exceptions. 
+	 */
+//	public class ComplexObjectInitializer extends LazyInitializer<GitCommit> {
+//		@Override
+//		protected GitCommit initialize() {
+//			return repository.getCommit(objectId.getName());
+//		}
+//	}
+	
 	private class ProxyCommitPlaceholder implements CommitPlaceholder {
 		
 		private RealCommitPlaceholder placeholder = null;
@@ -73,7 +85,7 @@ public class GitTag {
 		}
 		
 		private void load() throws IOException, GitAPIException {
-			gitCommit = repository.getCommit(repository.getJGitRepository().exactRef("refs/tags/"+name).getObjectId().getName());
+			gitCommit = repository.getCommit(objectId.getName());
 		}
 		
 		@Override
