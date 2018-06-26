@@ -8,6 +8,9 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
 
+import com.gitenter.gitar.util.GitPlaceholder;
+import com.gitenter.gitar.util.GitProxyPlaceholder;
+
 public class GitTag {
 
 	protected final String name;
@@ -22,7 +25,7 @@ public class GitTag {
 	}
 	
 	public GitCommit getCommit() throws IOException, GitAPIException {
-		return commitPlaceholder.getCommit();
+		return commitPlaceholder.get();
 	}
 
 	GitTag(GitRepository repository, String name, ObjectId objectId) throws IOException {
@@ -45,52 +48,15 @@ public class GitTag {
 		}
 	}
 	
-	private interface CommitPlaceholder {
-		public GitCommit getCommit() throws IOException, GitAPIException;
+	private interface CommitPlaceholder extends GitPlaceholder<GitCommit> {
+		public GitCommit get() throws IOException, GitAPIException;
 	}
 	
-	/*
-	 * TODO:
-	 * Consider rewrite the boilerplate code with "LazyInitializer", but
-	 * that doesn't support customized exceptions. 
-	 */
-//	public class ComplexObjectInitializer extends LazyInitializer<GitCommit> {
-//		@Override
-//		protected GitCommit initialize() {
-//			return repository.getCommit(objectId.getName());
-//		}
-//	}
-	
-	private class ProxyCommitPlaceholder implements CommitPlaceholder {
-		
-		private RealCommitPlaceholder placeholder = null;
+	private class ProxyCommitPlaceholder extends GitProxyPlaceholder<GitCommit> implements CommitPlaceholder {
 		
 		@Override
-		public GitCommit getCommit() throws IOException, GitAPIException {
-			
-			if (placeholder == null) {
-				placeholder = new RealCommitPlaceholder();
-			}
-			
-			return placeholder.getCommit();
-		}
-	}
-	
-	private class RealCommitPlaceholder implements CommitPlaceholder {
-		
-		private GitCommit gitCommit;
-		
-		RealCommitPlaceholder() throws IOException, GitAPIException {
-			load();
-		}
-		
-		private void load() throws IOException, GitAPIException {
-			gitCommit = repository.getCommit(objectId.getName());
-		}
-		
-		@Override
-		public GitCommit getCommit() {
-			return gitCommit;
+		public GitCommit getReal() throws IOException, GitAPIException {
+			return repository.getCommit(objectId.getName());
 		}
 	}
 }
