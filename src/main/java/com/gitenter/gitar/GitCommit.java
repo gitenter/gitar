@@ -7,6 +7,8 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 
+import lombok.Getter;
+
 public class GitCommit {
 	
 	/*
@@ -18,11 +20,18 @@ public class GitCommit {
 	 */
 	static final String EMPTY_SHA = "0000000000000000000000000000000000000000";
 	
+	@Getter
 	private final Date timestamp;
+	
+	@Getter
 	private final String message;
+	
+	@Getter
 	private final String sha;
 	
 	final GitRepository repository;
+	
+	@Getter
 	final GitAuthor author;
 	
 	/*
@@ -32,22 +41,6 @@ public class GitCommit {
 	 * a way to keep it private.
 	 */
 	final RevCommit jGitCommit;
-	
-	public Date getTimestamp() {
-		return timestamp;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-	
-	public String getSha() {
-		return sha;
-	}
-	
-	public GitAuthor getAuthor() {
-		return author;
-	}
 	
 	/*
 	 * Even if RevCommit is a subclass of ObjectId, we cannot remove objectId

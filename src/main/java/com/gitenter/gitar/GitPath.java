@@ -2,13 +2,18 @@ package com.gitenter.gitar;
 
 import java.io.File;
 
+import lombok.Getter;
+
 public abstract class GitPath {
 
+	@Getter
 	protected final String relativePath;
-	final GitCommit commit;
 	
-	public String getRelativePath() {
-		return relativePath;
+	final GitCommit commit;
+
+	protected GitPath(GitCommit commit, String relativePath) {
+		this.commit = commit;
+		this.relativePath = relativePath;
 	}
 	
 	public String getName() {
@@ -18,10 +23,5 @@ public abstract class GitPath {
 		 * there is a better way to do it.
 		 */
 		return new File(relativePath).getName();
-	}
-
-	protected GitPath(GitCommit commit, String relativePath) {
-		this.commit = commit;
-		this.relativePath = relativePath;
 	}
 }

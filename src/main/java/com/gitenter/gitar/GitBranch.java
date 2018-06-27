@@ -11,16 +11,16 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 
+import lombok.Getter;
+
 public class GitBranch {
 	
+	@Getter
 	protected final String name;
+	
 	protected final GitRepository repository;
 	
 	private final Ref jGitBranch;
-	
-	public String getName() {
-		return name;
-	}
 
 	GitBranch(GitRepository repository, String name) throws IOException {
 		this.repository = repository;

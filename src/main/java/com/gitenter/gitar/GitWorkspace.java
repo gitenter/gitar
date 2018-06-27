@@ -12,6 +12,8 @@ import org.eclipse.jgit.api.errors.NoMessageException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.transport.RefSpec;
 
+import lombok.Getter;
+
 public class GitWorkspace extends File {
 	
 	private static final long serialVersionUID = 1L;
@@ -23,12 +25,10 @@ public class GitWorkspace extends File {
 	 */
 	private static Map<GitNormalRepository,GitWorkspace> instances = new Hashtable<GitNormalRepository,GitWorkspace>();
 	
+	@Getter
 	private GitBranch branch;
-	private final GitNormalRepository repository;
 	
-	public GitBranch getBranch() {
-		return branch;
-	}
+	private final GitNormalRepository repository;
 	
 	private GitWorkspace(GitBranch branch, GitNormalRepository repository) {
 		super(repository.directory.getAbsolutePath());

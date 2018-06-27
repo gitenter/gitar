@@ -2,20 +2,17 @@ package com.gitenter.gitar;
 
 import org.eclipse.jgit.lib.PersonIdent;
 
+import lombok.Getter;
+
 public class GitAuthor {
 
+	@Getter
 	private final String name;
+	
+	@Getter
 	private final String emailAddress;
 	
 	final GitCommit commit;
-	
-	public String getName() {
-		return name;
-	}
-
-	public String getEmailAddress() {
-		return emailAddress;
-	}
 
 	GitAuthor(GitCommit commit, PersonIdent jGitPersonIdent) {
 

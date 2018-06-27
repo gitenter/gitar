@@ -15,6 +15,8 @@ import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 
+import lombok.Getter;
+
 public abstract class GitRepository {
 	
 	/*
@@ -26,8 +28,13 @@ public abstract class GitRepository {
 	 */
 	protected static Map<File,GitRepository> instances = new Hashtable<File,GitRepository>();
 	
+	@Getter
 	protected final File directory;
 	
+	protected GitRepository(File directory) {
+		this.directory = directory;
+	}
+
 	/*
 	 * TODO:
 	 * This is mostly for bare repository only. Actions are through
@@ -38,16 +45,8 @@ public abstract class GitRepository {
 	 * still need a universal way to get JGit "git" and handle close()
 	 * of it at the same time.
 	 */
-
-	public File getDirectory() {
-		return directory;
-	}
-	
-	protected GitRepository(File directory) {
-		this.directory = directory;
-	}
-
 	abstract Git getJGitGit() throws IOException;
+	
 	abstract Repository getJGitRepository() throws IOException;
 	
 	protected boolean isNormalRepository() {

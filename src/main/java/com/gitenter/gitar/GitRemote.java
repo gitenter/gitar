@@ -12,6 +12,4 @@ public class GitRemote {
 		this.name = name;
 		this.url = url;
 	}
-	
-	
 }

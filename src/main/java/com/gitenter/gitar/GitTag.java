@@ -19,6 +19,7 @@ public class GitTag {
 	protected final String name;
 	
 	protected final ObjectId objectId;
+	
 	protected final GitRepository repository;
 	
 	private CommitPlaceholder commitPlaceholder = new ProxyCommitPlaceholder();
