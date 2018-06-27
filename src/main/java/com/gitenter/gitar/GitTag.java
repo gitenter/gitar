@@ -11,21 +11,39 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import com.gitenter.gitar.util.GitPlaceholder;
 import com.gitenter.gitar.util.GitProxyPlaceholder;
 
+import lombok.Getter;
+
 public class GitTag {
 
+	@Getter
 	protected final String name;
-	protected final ObjectId objectId;
 	
+	protected final ObjectId objectId;
 	protected final GitRepository repository;
 	
-	private CommitPlaceholder commitPlaceholder;
-	
-	public String getName() {
-		return name;
-	}
+	private CommitPlaceholder commitPlaceholder = new ProxyCommitPlaceholder();
 	
 	public GitCommit getCommit() throws IOException, GitAPIException {
 		return commitPlaceholder.get();
+	}
+	
+	/*
+	 * The alternative choice is directly have "CommitBean" instance variable
+	 * and set it as null. When "get()", check if it exists and if null, calculate
+	 * its value. It should be quite save outside of this class, but in class the
+	 * instance variable may be accidentally accessed. I am doing this to ensure that 
+	 * it will not happen even internally.
+	 */
+	private interface CommitPlaceholder extends GitPlaceholder<GitCommit> {
+		public GitCommit get() throws IOException, GitAPIException;
+	}
+	
+	private class ProxyCommitPlaceholder extends GitProxyPlaceholder<GitCommit> implements CommitPlaceholder {
+		
+		@Override
+		public GitCommit getReal() throws IOException, GitAPIException {
+			return repository.getCommit(objectId.getName());
+		}
 	}
 
 	GitTag(GitRepository repository, String name, ObjectId objectId) throws IOException {
@@ -33,8 +51,6 @@ public class GitTag {
 		this.name = name;
 		this.objectId = objectId;
 		this.repository = repository;	
-		
-		this.commitPlaceholder = new ProxyCommitPlaceholder();
 	}
 	
 	GitTag downCasting() throws IOException, GitAPIException {
@@ -45,18 +61,6 @@ public class GitTag {
 		}
 		catch(IncorrectObjectTypeException notAnAnnotatedTag) {
 			return new GitLightweightTag(this);
-		}
-	}
-	
-	private interface CommitPlaceholder extends GitPlaceholder<GitCommit> {
-		public GitCommit get() throws IOException, GitAPIException;
-	}
-	
-	private class ProxyCommitPlaceholder extends GitProxyPlaceholder<GitCommit> implements CommitPlaceholder {
-		
-		@Override
-		public GitCommit getReal() throws IOException, GitAPIException {
-			return repository.getCommit(objectId.getName());
 		}
 	}
 }

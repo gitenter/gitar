@@ -36,8 +36,8 @@ public class GitFolder extends GitPath {
 	
 	public GitFile getFile(String name) throws FileNotFoundException, IOException {
 		GitPath subpath = getSubpath(name);
-		assert subpath instanceof GitFilepath;
-		return ((GitFilepath)subpath).downCasting();
+		assert subpath instanceof GitFile;
+		return (GitFile)subpath;
 	}
 	
 	public Collection<GitPath> list() {
@@ -163,7 +163,7 @@ public class GitFolder extends GitPath {
 			return new GitPathWrapper(folder, hasNext);
 		}
 		else {
-			GitPath file = new GitFilepath(commit, treeWalk.getPathString());
+			GitPath file = new GitFile(commit, treeWalk.getPathString());
 			
 			hasNext = treeWalk.next();
 			return new GitPathWrapper(file, hasNext);

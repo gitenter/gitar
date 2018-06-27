@@ -13,7 +13,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
 import com.gitenter.gitar.GitCommit;
-import com.gitenter.gitar.GitFilepath;
+import com.gitenter.gitar.GitFile;
 import com.gitenter.gitar.GitFolder;
 import com.gitenter.gitar.GitNormalRepository;
 import com.gitenter.gitar.GitWorkspace;
@@ -77,9 +77,9 @@ public class GitFolderTest {
 		
 		assertEquals(folder.list().size(), 2);
 		assertTrue(folder.hasSubpath("file-1"));
-		assertTrue(folder.getSubpath("file-1") instanceof GitFilepath);
+		assertTrue(folder.getSubpath("file-1") instanceof GitFile);
 		assertTrue(folder.hasSubpath("file-2"));
-		assertTrue(folder.getSubpath("file-2") instanceof GitFilepath);
+		assertTrue(folder.getSubpath("file-2") instanceof GitFile);
 	}
 	
 	@Test
@@ -94,14 +94,14 @@ public class GitFolderTest {
 		GitFolder topLevelFolder = folder.cd("top-level-folder");
 		assertEquals(topLevelFolder.list().size(), 2);
 		assertTrue(topLevelFolder.hasSubpath("file-in-top-level-folder"));
-		assertTrue(topLevelFolder.getSubpath("file-in-top-level-folder") instanceof GitFilepath);
+		assertTrue(topLevelFolder.getSubpath("file-in-top-level-folder") instanceof GitFile);
 		assertTrue(topLevelFolder.hasSubpath("second-level-folder"));
 		assertTrue(topLevelFolder.getSubpath("second-level-folder") instanceof GitFolder);
 		
 		GitFolder secondLevelFolder = topLevelFolder.cd("second-level-folder");
 		assertEquals(secondLevelFolder.list().size(), 1);
 		assertTrue(secondLevelFolder.hasSubpath("file-in-second-level-folder"));
-		assertTrue(secondLevelFolder.getSubpath("file-in-second-level-folder") instanceof GitFilepath);
+		assertTrue(secondLevelFolder.getSubpath("file-in-second-level-folder") instanceof GitFile);
 	}
 	
 	@Test
@@ -111,14 +111,14 @@ public class GitFolderTest {
 		
 		assertEquals(folder.list().size(), 2);
 		assertTrue(folder.hasSubpath("file-in-top-level-folder"));
-		assertTrue(folder.getSubpath("file-in-top-level-folder") instanceof GitFilepath);
+		assertTrue(folder.getSubpath("file-in-top-level-folder") instanceof GitFile);
 		assertTrue(folder.hasSubpath("second-level-folder"));
 		assertTrue(folder.getSubpath("second-level-folder") instanceof GitFolder);
 		
 		GitFolder secondLevelFolder = folder.cd("second-level-folder");
 		assertEquals(secondLevelFolder.list().size(), 1);
 		assertTrue(secondLevelFolder.hasSubpath("file-in-second-level-folder"));
-		assertTrue(secondLevelFolder.getSubpath("file-in-second-level-folder") instanceof GitFilepath);
+		assertTrue(secondLevelFolder.getSubpath("file-in-second-level-folder") instanceof GitFile);
 	}
 	
 	@Test
