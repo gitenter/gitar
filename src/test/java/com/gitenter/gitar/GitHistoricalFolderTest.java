@@ -13,12 +13,12 @@ import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
 import com.gitenter.gitar.GitCommit;
-import com.gitenter.gitar.GitFile;
-import com.gitenter.gitar.GitFolder;
+import com.gitenter.gitar.GitHistoricalFile;
+import com.gitenter.gitar.GitHistoricalFolder;
 import com.gitenter.gitar.GitNormalRepository;
 import com.gitenter.gitar.GitWorkspace;
 
-public class GitFolderTest {
+public class GitHistoricalFolderTest {
 	
 	@Rule public TemporaryFolder folder = new TemporaryFolder();
 	@Rule public ExpectedException thrown = ExpectedException.none();
@@ -73,52 +73,52 @@ public class GitFolderTest {
 	@Test
 	public void testFilesOnRoot() throws IOException, GitAPIException {
 		
-		GitFolder folder = commitWithFileOnRoot.getRoot();
+		GitHistoricalFolder folder = commitWithFileOnRoot.getRoot();
 		
 		assertEquals(folder.list().size(), 2);
 		assertTrue(folder.hasSubpath("file-1"));
-		assertTrue(folder.getSubpath("file-1") instanceof GitFile);
+		assertTrue(folder.getSubpath("file-1") instanceof GitHistoricalFile);
 		assertTrue(folder.hasSubpath("file-2"));
-		assertTrue(folder.getSubpath("file-2") instanceof GitFile);
+		assertTrue(folder.getSubpath("file-2") instanceof GitHistoricalFile);
 	}
 	
 	@Test
 	public void testComplicatedFolderStructureOnRoot() throws IOException {	
 		
-		GitFolder folder = commitWithComplicatedFolderStructure.getRoot();
+		GitHistoricalFolder folder = commitWithComplicatedFolderStructure.getRoot();
 		
 		assertEquals(folder.list().size(), 1);
 		assertTrue(folder.hasSubpath("top-level-folder"));
-		assertTrue(folder.getSubpath("top-level-folder") instanceof GitFolder);
+		assertTrue(folder.getSubpath("top-level-folder") instanceof GitHistoricalFolder);
 		
-		GitFolder topLevelFolder = folder.cd("top-level-folder");
+		GitHistoricalFolder topLevelFolder = folder.cd("top-level-folder");
 		assertEquals(topLevelFolder.list().size(), 2);
 		assertTrue(topLevelFolder.hasSubpath("file-in-top-level-folder"));
-		assertTrue(topLevelFolder.getSubpath("file-in-top-level-folder") instanceof GitFile);
+		assertTrue(topLevelFolder.getSubpath("file-in-top-level-folder") instanceof GitHistoricalFile);
 		assertTrue(topLevelFolder.hasSubpath("second-level-folder"));
-		assertTrue(topLevelFolder.getSubpath("second-level-folder") instanceof GitFolder);
+		assertTrue(topLevelFolder.getSubpath("second-level-folder") instanceof GitHistoricalFolder);
 		
-		GitFolder secondLevelFolder = topLevelFolder.cd("second-level-folder");
+		GitHistoricalFolder secondLevelFolder = topLevelFolder.cd("second-level-folder");
 		assertEquals(secondLevelFolder.list().size(), 1);
 		assertTrue(secondLevelFolder.hasSubpath("file-in-second-level-folder"));
-		assertTrue(secondLevelFolder.getSubpath("file-in-second-level-folder") instanceof GitFile);
+		assertTrue(secondLevelFolder.getSubpath("file-in-second-level-folder") instanceof GitHistoricalFile);
 	}
 	
 	@Test
 	public void testComplicatedFolderStructureNestedFolder() throws IOException {
 		
-		GitFolder folder = commitWithComplicatedFolderStructure.getFolder("top-level-folder");
+		GitHistoricalFolder folder = commitWithComplicatedFolderStructure.getFolder("top-level-folder");
 		
 		assertEquals(folder.list().size(), 2);
 		assertTrue(folder.hasSubpath("file-in-top-level-folder"));
-		assertTrue(folder.getSubpath("file-in-top-level-folder") instanceof GitFile);
+		assertTrue(folder.getSubpath("file-in-top-level-folder") instanceof GitHistoricalFile);
 		assertTrue(folder.hasSubpath("second-level-folder"));
-		assertTrue(folder.getSubpath("second-level-folder") instanceof GitFolder);
+		assertTrue(folder.getSubpath("second-level-folder") instanceof GitHistoricalFolder);
 		
-		GitFolder secondLevelFolder = folder.cd("second-level-folder");
+		GitHistoricalFolder secondLevelFolder = folder.cd("second-level-folder");
 		assertEquals(secondLevelFolder.list().size(), 1);
 		assertTrue(secondLevelFolder.hasSubpath("file-in-second-level-folder"));
-		assertTrue(secondLevelFolder.getSubpath("file-in-second-level-folder") instanceof GitFile);
+		assertTrue(secondLevelFolder.getSubpath("file-in-second-level-folder") instanceof GitHistoricalFile);
 	}
 	
 	@Test
@@ -148,7 +148,7 @@ public class GitFolderTest {
 	@Test
 	public void testEmptyFolderStructure() throws IOException {
 		
-		GitFolder folder = commitWithEmptyFolderStructure.getRoot();
+		GitHistoricalFolder folder = commitWithEmptyFolderStructure.getRoot();
 		assertEquals(folder.list().size(), 0);
 	}
 	

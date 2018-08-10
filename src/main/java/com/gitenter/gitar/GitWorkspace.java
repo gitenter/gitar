@@ -14,7 +14,7 @@ import org.eclipse.jgit.transport.RefSpec;
 
 import lombok.Getter;
 
-public class GitWorkspace extends File {
+public class GitWorkspace extends File implements GitState {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -100,5 +100,23 @@ public class GitWorkspace extends File {
 			RefSpec spec = new RefSpec(branch.getName()+":"+branch.getName());
 			git.push().setRemote(remote.url).setRefSpecs(spec).call();
 		}
+	}
+
+	@Override
+	public GitLocalFile getFile(String relativePath) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GitLocalFolder getFolder(String relativePath) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GitLocalFolder getRoot() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -12,12 +12,12 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import com.gitenter.gitar.GitCommit;
-import com.gitenter.gitar.GitFile;
-import com.gitenter.gitar.GitFolder;
+import com.gitenter.gitar.GitHistoricalFile;
+import com.gitenter.gitar.GitHistoricalFolder;
 import com.gitenter.gitar.GitNormalRepository;
 import com.gitenter.gitar.GitWorkspace;
 
-public class GitFileTest {
+public class GitHistoricalFileTest {
 	
 	@Rule public TemporaryFolder folder = new TemporaryFolder();
 	
@@ -35,7 +35,7 @@ public class GitFileTest {
 		GitWorkspaceTest.add(workspace, file, "Add file");
 		
 		GitCommit commit = repository.getCurrentBranch().getHead();
-		GitFile gitFile = commit.getFile("file");
+		GitHistoricalFile gitFile = commit.getFile("file");
 		
 		assertEquals(new String(gitFile.getBlobContent()), "file content");
 	}
@@ -52,7 +52,7 @@ public class GitFileTest {
 		GitWorkspaceTest.add(workspace, mimeTypeFiles, "Add mime type file");
 		
 		GitCommit commit = repository.getCurrentBranch().getHead();
-		GitFolder folder = commit.getFolder(".");
+		GitHistoricalFolder folder = commit.getFolder(".");
 		
 		assertEquals(folder.cd("mime-types").getFile("sample.png").getMimeType(), "image/png");
 		assertEquals(folder.cd("mime-types").getFile("sample.jpg").getMimeType(), "image/jpeg");
