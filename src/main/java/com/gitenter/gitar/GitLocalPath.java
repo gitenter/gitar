@@ -4,14 +4,18 @@ import java.io.File;
 
 import lombok.Getter;
 
-public abstract class GitLocalPath implements GitPath {
+public abstract class GitLocalPath extends File implements GitPath {
+	
+	private static final long serialVersionUID = 1L;
 
 	@Getter
 	protected final String relativePath;
 	
 	final GitWorkspace workspace;
 
-	protected GitLocalPath(GitWorkspace workspace, String relativePath) {
+	GitLocalPath(GitWorkspace workspace, String relativePath) {
+		super(workspace, relativePath);
+		
 		this.workspace = workspace;
 		this.relativePath = relativePath;
 	}

@@ -1,38 +1,77 @@
 package com.gitenter.gitar;
 
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class GitLocalFolder extends GitLocalPath implements GitFolder {
 
-	private GitLocalFolder(GitWorkspace workspace, String relativePath) {
+	private static final long serialVersionUID = 1L;
+
+	GitLocalFolder(GitWorkspace workspace, String relativePath) throws FileNotFoundException {
 		super(workspace, relativePath);
-		// TODO Auto-generated constructor stub
+		if (!exists()) {
+			throw new FileNotFoundException("Navigate in local folder: folder not exist");
+		}
+		if (isFile()) {
+			throw new FileNotFoundException("Navigate in local folder: the provide relativePath belongs to a file");
+		}
+	}
+	
+	@Override
+	public boolean hasSubpath(String name) {
+		for (String subpathName : list()) {
+			if (subpathName.equals(name)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
-	public GitPath getSubpath(String name) {
-		// TODO Auto-generated method stub
-		return null;
+	public GitLocalPath getSubpath(String name) {
+		
+		File file = new File(this, name);
+		try {
+			if (file.isDirectory()) {
+				return new GitLocalFolder(this.workspace, Paths.get(relativePath, name).toString());
+			}
+			else {
+				assert file.isFile();
+				return new GitLocalFile(this.workspace, Paths.get(relativePath, name).toString());
+			}
+		}
+		catch (FileNotFoundException e) {
+			/*
+			 * Exception is raised if the file/folder type doesn't match. It cannot happen in
+			 * here so this is a dead end code which will never happen.
+			 * 
+			 * Therefore, we can swallow the exception and return null.
+			 */
+			return null;
+		}
 	}
 
 	@Override
-	public GitFolder cd(String name) {
-		// TODO Auto-generated method stub
-		return null;
+	public GitLocalFolder cd(String name) throws FileNotFoundException {
+		return new GitLocalFolder(this.workspace, Paths.get(relativePath, name).toString());
 	}
 
 	@Override
-	public GitFile getFile(String name) throws FileNotFoundException, IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public GitLocalFile getFile(String name) throws FileNotFoundException {
+		return new GitLocalFile(this.workspace, Paths.get(relativePath, name).toString());
 	}
 
 	@Override
-	public Collection<? extends GitPath> list() {
-		// TODO Auto-generated method stub
-		return null;
+	public Collection<? extends GitPath> ls() {
+		Collection<GitLocalPath> subpaths = new ArrayList<GitLocalPath>();
+		for (String subpathName : list()) {
+			if (!subpathName.equals(".git")) {
+				subpaths.add(getSubpath(subpathName));
+			}
+		}
+		return subpaths;
 	}
-
 }

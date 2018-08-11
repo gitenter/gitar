@@ -6,8 +6,9 @@ import java.util.Collection;
 
 public interface GitFolder extends GitPath {
 
+	public boolean hasSubpath(String name);
 	public GitPath getSubpath(String name);
-	public GitFolder cd(String name);
+	public GitFolder cd(String name) throws FileNotFoundException;
 	public GitFile getFile(String name) throws FileNotFoundException, IOException;
-	public Collection<? extends GitPath> list();
+	public Collection<? extends GitPath> ls();
 }

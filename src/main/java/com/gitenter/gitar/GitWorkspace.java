@@ -1,6 +1,7 @@
 package com.gitenter.gitar;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
@@ -103,20 +104,17 @@ public class GitWorkspace extends File implements GitState {
 	}
 
 	@Override
-	public GitLocalFile getFile(String relativePath) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public GitLocalFile getFile(String relativePath) throws FileNotFoundException {
+		return new GitLocalFile(this, relativePath);
 	}
 
 	@Override
-	public GitLocalFolder getFolder(String relativePath) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public GitLocalFolder getFolder(String relativePath) throws FileNotFoundException {
+		return new GitLocalFolder(this, relativePath);
 	}
 
 	@Override
-	public GitLocalFolder getRoot() throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public GitLocalFolder getRoot() throws FileNotFoundException {
+		return getFolder(".");
 	}
 }

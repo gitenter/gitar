@@ -44,7 +44,7 @@ public class GitHistoricalFolder extends GitHistoricalPath implements GitFolder 
 	}
 	
 	@Override
-	public Collection<GitHistoricalPath> list() {
+	public Collection<GitHistoricalPath> ls() {
 		return subpathMap.values();
 	}
 	
