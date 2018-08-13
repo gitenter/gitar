@@ -8,33 +8,64 @@ import java.io.IOException;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 
-public class GitLocalFolderTest extends GitFolderTest {
+import com.gitenter.gitar.setup.GitNormalRepositorySetup;
 
+public class GitLocalFolderTest {
+	
+	@Rule public TemporaryFolder folder = new TemporaryFolder();
+	@Rule public ExpectedException thrown = ExpectedException.none();
+
+	private GitWorkspace workspaceWithEmptyFolderStructure;
 	private GitWorkspace workspaceWithFileOnRoot;
 	private GitWorkspace workspaceWithComplicatedFolderStructure;
-	private GitWorkspace workspaceWithEmptyFolderStructure;
+	
+	@Before
+	public void setupEmptyFolderStructure() throws IOException, GitAPIException {
+		
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithCleanWorkspace(folder);
+		workspaceWithEmptyFolderStructure = repository.getCurrentBranch().checkoutTo();
+	}
 	
 	@Before 
 	public void setupFileOnRoot() throws IOException, GitAPIException {
 		
-		super.setupFileOnRoot();
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithFileOnRoot(folder);
 		workspaceWithFileOnRoot = repository.getCurrentBranch().checkoutTo();
 	}
 	
 	@Before 
 	public void setupComplicatedFolderStructure() throws IOException, GitAPIException {
 		
-		super.setupComplicatedFolderStructure();
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithComplicatedFolderStructure(folder);
 		workspaceWithComplicatedFolderStructure = repository.getCurrentBranch().checkoutTo();
 	}
 	
-	@Before
-	public void setupEmptyFolderStructure() throws IOException, GitAPIException {
+	@Test
+	public void testEmptyFolderStructure() throws FileNotFoundException {
 		
-		super.setupEmptyFolderStructure();
-		workspaceWithEmptyFolderStructure = repository.getCurrentBranch().checkoutTo();
+		GitLocalFolder folder = workspaceWithEmptyFolderStructure.getRoot();
+		assertEquals(folder.ls().size(), 0);
+	}
+	
+	@Test
+	public void testEmptyFolderStructureFolderNotExist() throws FileNotFoundException {
+		
+		thrown.expect(FileNotFoundException.class);
+	    thrown.expectMessage("Navigate in local folder: folder not exist");
+	    workspaceWithEmptyFolderStructure.getFolder("folder-not-exist");
+	}
+	
+	@Test 
+	public void testEmptyFolderFileNotExist() throws FileNotFoundException {
+		
+		thrown.expect(FileNotFoundException.class);
+	    thrown.expectMessage("Navigate in local file: file not exist");
+	    workspaceWithFileOnRoot.getRoot().getFile("file-not-exist");
 	}
 	
 	@Test
@@ -110,21 +141,6 @@ public class GitLocalFolderTest extends GitFolderTest {
 		thrown.expect(FileNotFoundException.class);
 	    thrown.expectMessage("Navigate in local folder: folder not exist");
 	    workspaceWithComplicatedFolderStructure.getFolder("top-level-folder/second-level-folder-not-exist");
-	}
-	
-	@Test
-	public void testEmptyFolderStructure() throws FileNotFoundException {
-		
-		GitLocalFolder folder = workspaceWithEmptyFolderStructure.getRoot();
-		assertEquals(folder.ls().size(), 0);
-	}
-	
-	@Test
-	public void testEmptyFolderStructureFolderNotExist() throws FileNotFoundException {
-		
-		thrown.expect(FileNotFoundException.class);
-	    thrown.expectMessage("Navigate in local folder: folder not exist");
-	    workspaceWithEmptyFolderStructure.getFolder("folder-not-exist");
 	}
 	
 //	private static void showHierarchy (GitPath gitPath, int level) {

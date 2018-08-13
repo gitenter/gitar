@@ -16,6 +16,8 @@ import com.gitenter.gitar.GitHistoricalFile;
 import com.gitenter.gitar.GitHistoricalFolder;
 import com.gitenter.gitar.GitNormalRepository;
 import com.gitenter.gitar.GitWorkspace;
+import com.gitenter.gitar.setup.GitNormalRepositorySetup;
+import com.gitenter.gitar.setup.GitWorkspaceSetup;
 
 public class GitFileTest {
 	
@@ -27,7 +29,7 @@ public class GitFileTest {
 		String fileRelativePath = "file";
 		String fileContent = "file content";
 		
-		GitNormalRepository repository = GitNormalRepositoryTest.getOneJustInitialized(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
 		GitWorkspace workspace = repository.getCurrentBranch().checkoutTo();
 		
 		File file = folder.newFile(fileRelativePath);
@@ -35,7 +37,7 @@ public class GitFileTest {
 		FileWriter writer = new FileWriter(file);
 		writer.write(fileContent);
 		writer.close();
-		GitWorkspaceTest.add(workspace, file, "Add file");
+		GitWorkspaceSetup.add(workspace, file, "Add file");
 		
 		GitLocalFile localFile = workspace.getFile(fileRelativePath);
 		assertEquals(new String(localFile.getBlobContent()), fileContent);
@@ -49,13 +51,13 @@ public class GitFileTest {
 	@Test
 	public void testMimeTypes() throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = GitNormalRepositoryTest.getOneJustInitialized(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
 		GitWorkspace workspace = repository.getCurrentBranch().checkoutTo();
 		
 		ClassLoader classLoader = getClass().getClassLoader();
 		File mimeTypeFiles = new File(classLoader.getResource("mime-types").getFile());
 		
-		GitWorkspaceTest.add(workspace, mimeTypeFiles, "Add mime type file");
+		GitWorkspaceSetup.add(workspace, mimeTypeFiles, "Add mime type file");
 		
 		GitLocalFolder localFolder = workspace.getFolder(".");
 		

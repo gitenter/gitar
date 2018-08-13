@@ -7,33 +7,41 @@ import java.io.IOException;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 
-public class GitHistoricalFolderTest extends GitFolderTest {
+import com.gitenter.gitar.setup.GitNormalRepositorySetup;
 
+public class GitHistoricalFolderTest {
+
+	@Rule public TemporaryFolder folder = new TemporaryFolder();
+	@Rule public ExpectedException thrown = ExpectedException.none();
+	
+	private GitCommit commitWithEmptyFolderStructure;
 	private GitCommit commitWithFileOnRoot;
 	private GitCommit commitWithComplicatedFolderStructure;
-	private GitCommit commitWithEmptyFolderStructure;
+	
+	@Before
+	public void setupEmptyFolderStructure() throws IOException, GitAPIException {
+		
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithCleanWorkspace(folder);
+		commitWithEmptyFolderStructure = repository.getCurrentBranch().getHead();
+	}
 	
 	@Before 
 	public void setupFileOnRoot() throws IOException, GitAPIException {
 		
-		super.setupFileOnRoot();
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithFileOnRoot(folder);
 		commitWithFileOnRoot = repository.getCurrentBranch().getHead();
 	}
 	
 	@Before 
 	public void setupComplicatedFolderStructure() throws IOException, GitAPIException {
 		
-		super.setupComplicatedFolderStructure();
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithComplicatedFolderStructure(folder);
 		commitWithComplicatedFolderStructure = repository.getCurrentBranch().getHead();
-	}
-	
-	@Before
-	public void setupEmptyFolderStructure() throws IOException, GitAPIException {
-		
-		super.setupEmptyFolderStructure();
-		commitWithEmptyFolderStructure = repository.getCurrentBranch().getHead();
 	}
 	
 	@Test

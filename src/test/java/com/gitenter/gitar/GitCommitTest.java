@@ -13,6 +13,8 @@ import org.junit.rules.TemporaryFolder;
 import com.gitenter.gitar.GitCommit;
 import com.gitenter.gitar.GitNormalRepository;
 import com.gitenter.gitar.GitWorkspace;
+import com.gitenter.gitar.setup.GitNormalRepositorySetup;
+import com.gitenter.gitar.setup.GitWorkspaceSetup;
 
 public class GitCommitTest {
 	
@@ -21,10 +23,10 @@ public class GitCommitTest {
 	@Test
 	public void testCommitInfomation() throws IOException, GitAPIException, NoSuchFieldException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
-		GitNormalRepository repository = GitNormalRepositoryTest.getOneJustInitialized(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
 		
 		GitWorkspace workspace = repository.getCurrentBranch().checkoutTo();
-		GitWorkspaceTest.addACommit(workspace, "First commit message");
+		GitWorkspaceSetup.addACommit(workspace, "First commit message");
 		
 		GitCommit commit = repository.getCurrentBranch().getHead();
 		assertEquals(commit.getMessage(), "First commit message");
