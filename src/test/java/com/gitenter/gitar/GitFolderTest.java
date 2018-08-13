@@ -204,9 +204,25 @@ public class GitFolderTest {
 		GitHistoricalFolder folder = commitWithComplicatedFolderStructure.getFolder("top-level-folder");
 		testComplicatedFolderStructureNestedFolder(folder);
 	}
+
+	@Test
+	public void testComplicatedLocalFolderStructureGetFolderAsFile() throws FileNotFoundException {
+		
+		thrown.expect(FileNotFoundException.class);
+	    thrown.expectMessage("Local file path ./top-level-folder belongs to a folder");
+	    workspaceWithComplicatedFolderStructure.getRoot().getFile("top-level-folder");
+	}
 	
 	@Test
-	public void testComplicatedLocalFolderStructureGetFile() throws FileNotFoundException {
+	public void testComplicatedHistoricalFolderStructureGetFolderAsFile() throws IOException {
+		
+		thrown.expect(IOException.class);
+	    thrown.expectMessage("Git file path ./top-level-folder belongs to a folder");
+	    commitWithComplicatedFolderStructure.getRoot().getFile("top-level-folder");
+	}
+	
+	@Test
+	public void testComplicatedLocalFolderStructureGetFileAsFolder() throws FileNotFoundException {
 		
 		thrown.expect(FileNotFoundException.class);
 	    thrown.expectMessage("Local folder path top-level-folder/file-in-top-level-folder belongs to a file");
@@ -214,7 +230,7 @@ public class GitFolderTest {
 	}
 	
 	@Test
-	public void testComplicatedHistoricalFolderStructureGetFile() throws IOException {
+	public void testComplicatedHistoricalFolderStructureGetFileAsFolder() throws IOException {
 		
 		thrown.expect(IOException.class);
 	    thrown.expectMessage("Git folder path top-level-folder/file-in-top-level-folder belongs to a file");
