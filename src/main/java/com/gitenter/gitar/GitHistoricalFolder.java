@@ -77,10 +77,10 @@ public class GitHistoricalFolder extends GitHistoricalPath implements GitFolder 
 				 * TODO:
 				 * A better exception.
 				 */
-				throw new IOException("Navigate in git folder: cannot access absolute path: "+relativePath);
+				throw new FileNotFoundException("Navigate in git folder: cannot access absolute path: "+relativePath);
 			}
 			if (normalizedPath.startsWith("..")) {
-				throw new IOException("Navigate in git folder: parent directory "+relativePath+" is not accessable.");
+				throw new FileNotFoundException("Navigate in git folder: parent directory "+relativePath+" is not accessable.");
 			}
 			if (normalizedPath.toString().equals("")) {
 				/*
@@ -115,7 +115,7 @@ public class GitHistoricalFolder extends GitHistoricalPath implements GitFolder 
 			if (!cleanedUpRelativePath.equals(".")) {
 				for (int i = 0; i < normalizedPath.getNameCount(); ++i) {
 					if (!hasNext) {
-						throw new IOException("Navigate in git folder: folder not exist "+relativePath);
+						throw new FileNotFoundException("Navigate in git folder: folder not exist "+relativePath);
 					}
 					if (treeWalk.getNameString().equals(normalizedPath.getName(i).toString())) {
 						if (treeWalk.isSubtree()) {
@@ -124,10 +124,10 @@ public class GitHistoricalFolder extends GitHistoricalPath implements GitFolder 
 							continue;
 						}
 						else {
-							throw new IOException("Navigate in git folder: the provide relativePath belongs to a file "+relativePath);
+							throw new FileNotFoundException("Navigate in git folder: the provide relativePath belongs to a file "+relativePath);
 						}
 					}
-					throw new IOException("Navigate in git folder: folder not exist "+relativePath);
+					throw new FileNotFoundException("Navigate in git folder: folder not exist "+relativePath);
 				}
 			}
 			
