@@ -15,6 +15,7 @@ import org.junit.rules.TemporaryFolder;
 import com.gitenter.gitar.GitAnnotatedTag;
 import com.gitenter.gitar.GitLightweightTag;
 import com.gitenter.gitar.GitNormalRepository;
+import com.gitenter.gitar.setup.GitNormalRepositorySetup;
 
 public class GitTagTest {
 	
@@ -22,20 +23,20 @@ public class GitTagTest {
 	
 	@Test
 	public void testTagNotExist() throws IOException, GitAPIException {
-		GitNormalRepository repository = GitNormalRepositoryTest.getOneJustInitialized(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
 		assertEquals(repository.getTag("tag-not-exist"), null);
 	}
 
 	@Test(expected = NoHeadException.class)
 	public void testCreateTagEmptyNormalRepository() throws IOException, GitAPIException {
-		GitNormalRepository repository = GitNormalRepositoryTest.getOneJustInitialized(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
 		repository.createTag("a-tag");
 	}
 	
 	@Test
 	public void testCreateAndGetTagNormalRepository() throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = GitNormalRepositoryTest.getOneWithCommit(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithCommit(folder);
 		GitCommit commit = repository.getCurrentBranch().getHead();
 		
 		repository.createTag("a-lightweight-tag");

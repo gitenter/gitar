@@ -1,6 +1,7 @@
 package com.gitenter.gitar;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
@@ -14,7 +15,7 @@ import org.eclipse.jgit.transport.RefSpec;
 
 import lombok.Getter;
 
-public class GitWorkspace extends File {
+public class GitWorkspace extends File implements GitState {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -100,5 +101,20 @@ public class GitWorkspace extends File {
 			RefSpec spec = new RefSpec(branch.getName()+":"+branch.getName());
 			git.push().setRemote(remote.url).setRefSpecs(spec).call();
 		}
+	}
+
+	@Override
+	public GitLocalFile getFile(String relativePath) throws FileNotFoundException {
+		return new GitLocalFile(this, relativePath);
+	}
+
+	@Override
+	public GitLocalFolder getFolder(String relativePath) throws FileNotFoundException {
+		return new GitLocalFolder(this, relativePath);
+	}
+
+	@Override
+	public GitLocalFolder getRoot() throws FileNotFoundException {
+		return getFolder(".");
 	}
 }

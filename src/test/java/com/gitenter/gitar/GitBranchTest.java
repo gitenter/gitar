@@ -12,11 +12,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import com.gitenter.gitar.GitBareRepository;
-import com.gitenter.gitar.GitCommit;
-import com.gitenter.gitar.GitNormalBranch;
-import com.gitenter.gitar.GitNormalRepository;
-import com.gitenter.gitar.GitWorkspace;
+import com.gitenter.gitar.setup.GitBareRepositorySetup;
+import com.gitenter.gitar.setup.GitNormalRepositorySetup;
+import com.gitenter.gitar.setup.GitWorkspaceSetup;
 
 public class GitBranchTest {
 	
@@ -25,7 +23,7 @@ public class GitBranchTest {
 	@Test
 	public void testBranchNotExist() throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = GitNormalRepositoryTest.getOneJustInitialized(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
 		assertEquals(repository.getBranch("branch-not-exist"), null);
 	}
 	
@@ -41,14 +39,14 @@ public class GitBranchTest {
 	 */
 	@Test(expected = RefNotFoundException.class)
 	public void testCreateBranchEmptyNormalRepository() throws IOException, GitAPIException {
-		GitNormalRepository repository = GitNormalRepositoryTest.getOneJustInitialized(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
 		repository.createBranch("a-branch");
 	}
 	
 	@Test
 	public void testCheckoutToFirstCommit() throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = GitNormalRepositoryTest.getOneJustInitialized(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
 		
 		GitNormalBranch currentBranch = repository.getCurrentBranch();
 		assertEquals(currentBranch.getName(), "master");
@@ -56,7 +54,7 @@ public class GitBranchTest {
 		assertEquals(repository.getBranch("master"), null);
 		
 		GitWorkspace workspace = currentBranch.checkoutTo();
-		GitWorkspaceTest.addACommit(workspace, "First commit message");
+		GitWorkspaceSetup.addACommit(workspace, "First commit message");
 		
 		assertEquals(currentBranch.getName(), "master");
 		assertEquals(repository.getBranches().size(), 1);
@@ -66,7 +64,7 @@ public class GitBranchTest {
 	@Test
 	public void testSwitchBetweenMultipleBranchesNormalRepository() throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = GitNormalRepositoryTest.getOneWithCommit(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithCommit(folder);
 		
 		repository.createBranch("a-branch");
 		repository.createBranch("another-branch");
@@ -86,7 +84,7 @@ public class GitBranchTest {
 	@Test
 	public void testCreateBranchBareRepository() throws IOException, GitAPIException {
 		
-		GitBareRepository repository = GitBareRepositoryTest.getOneWithCommit(folder);
+		GitBareRepository repository = GitBareRepositorySetup.getOneWithCommit(folder);
 		
 		assertEquals(repository.getBranches().size(), 1);
 		assertNotEquals(repository.getBranch("master"), null);
@@ -102,14 +100,14 @@ public class GitBranchTest {
 	@Test
 	public void testGetLogNormalRepository() throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = GitNormalRepositoryTest.getOneJustInitialized(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
 		
 		GitNormalBranch master = repository.getCurrentBranch();
 		GitWorkspace workspace = master.checkoutTo();
-		GitWorkspaceTest.addACommit(workspace, "First commit message to test getLog()");
-		GitWorkspaceTest.addACommit(workspace, "Second commit message to test getLog()");
-		GitWorkspaceTest.addACommit(workspace, "Third commit message to test getLog()");
-		GitWorkspaceTest.addACommit(workspace, "Fourth commit message to test getLog()");
+		GitWorkspaceSetup.addACommit(workspace, "First commit message to test getLog()");
+		GitWorkspaceSetup.addACommit(workspace, "Second commit message to test getLog()");
+		GitWorkspaceSetup.addACommit(workspace, "Third commit message to test getLog()");
+		GitWorkspaceSetup.addACommit(workspace, "Fourth commit message to test getLog()");
 		
 		List<GitCommit> log = master.getLog();
 		assertEquals(log.size(), 4);
@@ -142,7 +140,7 @@ public class GitBranchTest {
 	@Test
 	public void testExistCommitEvenEmptyFolderStructureShaNotEmpty() throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = GitNormalRepositoryTest.getOneWithCleanWorkspace(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithCleanWorkspace(folder);
 		GitCommit commit = repository.getCurrentBranch().getHead();
 		assertNotEquals(commit.getSha(), GitCommit.EMPTY_SHA);
 	}

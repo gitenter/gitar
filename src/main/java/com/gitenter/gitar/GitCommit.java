@@ -9,7 +9,7 @@ import org.eclipse.jgit.revwalk.RevWalk;
 
 import lombok.Getter;
 
-public class GitCommit {
+public class GitCommit implements GitState {
 	
 	/*
 	 * "update"/"post-receive" hooks to not correspond to any commit
@@ -90,21 +90,16 @@ public class GitCommit {
 		this.jGitCommit = jGitCommit;
 	}
 	
-	/*
-	 * TODO:
-	 * To get a universal one which can automatically tell whether the relativePath
-	 * is a folder or a file.
-	 * > public GitPath getPath(String relativePath) throws IOException;
-	 */
-	public GitFile getFile(String relativePath) throws IOException {
-		return new GitFile(this, relativePath);
+	@Override
+	public GitHistoricalFile getFile(String relativePath) throws IOException {
+		return new GitHistoricalFile(this, relativePath);
 	}
 	
-	public GitFolder getFolder(String relativePath) throws IOException {
-		return GitFolder.create(this, relativePath);
+	public GitHistoricalFolder getFolder(String relativePath) throws IOException {
+		return GitHistoricalFolder.create(this, relativePath);
 	}
 	
-	public GitFolder getRoot() throws IOException {
+	public GitHistoricalFolder getRoot() throws IOException {
 		return getFolder(".");
 	}
 }
