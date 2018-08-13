@@ -25,22 +25,35 @@ public class GitHistoricalFolder extends GitHistoricalPath implements GitFolder 
 	}
 	
 	@Override
-	public GitHistoricalPath getSubpath(String name) {
+	public GitHistoricalPath getSubpath(String name) throws FileNotFoundException {
+		if (!subpathMap.containsKey(name)) {
+			throw new FileNotFoundException(String.format("Git path %s not exist", Paths.get(relativePath, name)));
+		}
 		return subpathMap.get(name);
 	}
 	
 	@Override
-	public GitHistoricalFolder cd(String name) {
+	public GitHistoricalFolder cd(String name) throws FileNotFoundException {
 		GitHistoricalPath subpath = getSubpath(name);
-		assert subpath instanceof GitHistoricalFolder;
-		return (GitHistoricalFolder)subpath;
+		if (subpath instanceof GitHistoricalFolder) {
+			return (GitHistoricalFolder)subpath;
+		}
+		else {
+			assert subpath instanceof GitHistoricalFile;
+			throw new FileNotFoundException(String.format("Git folder path %s belongs to a file", Paths.get(relativePath, name)));
+		}
 	}
 	
 	@Override
 	public GitHistoricalFile getFile(String name) throws FileNotFoundException, IOException {
 		GitHistoricalPath subpath = getSubpath(name);
-		assert subpath instanceof GitHistoricalFile;
-		return (GitHistoricalFile)subpath;
+		if (subpath instanceof GitHistoricalFile) {
+			return (GitHistoricalFile)subpath;
+		}
+		else {
+			assert subpath instanceof GitHistoricalFolder;
+			throw new FileNotFoundException(String.format("Git file path %s belongs to a folder", Paths.get(relativePath, name)));
+		}
 	}
 	
 	@Override
@@ -77,10 +90,10 @@ public class GitHistoricalFolder extends GitHistoricalPath implements GitFolder 
 				 * TODO:
 				 * A better exception.
 				 */
-				throw new FileNotFoundException("Navigate in git folder: cannot access absolute path: "+relativePath);
+				throw new FileNotFoundException(String.format("Canot access git folder %s", relativePath));
 			}
 			if (normalizedPath.startsWith("..")) {
-				throw new FileNotFoundException("Navigate in git folder: parent directory "+relativePath+" is not accessable.");
+				throw new FileNotFoundException(String.format("%s include parent directory out of the scope of git repository", relativePath));
 			}
 			if (normalizedPath.toString().equals("")) {
 				/*
@@ -115,7 +128,7 @@ public class GitHistoricalFolder extends GitHistoricalPath implements GitFolder 
 			if (!cleanedUpRelativePath.equals(".")) {
 				for (int i = 0; i < normalizedPath.getNameCount(); ++i) {
 					if (!hasNext) {
-						throw new FileNotFoundException("Navigate in git folder: folder not exist "+relativePath);
+						throw new FileNotFoundException(String.format("Git folder path %s not exist", relativePath));
 					}
 					if (treeWalk.getNameString().equals(normalizedPath.getName(i).toString())) {
 						if (treeWalk.isSubtree()) {
@@ -124,10 +137,10 @@ public class GitHistoricalFolder extends GitHistoricalPath implements GitFolder 
 							continue;
 						}
 						else {
-							throw new FileNotFoundException("Navigate in git folder: the provide relativePath belongs to a file "+relativePath);
+							throw new FileNotFoundException(String.format("Git folder path %s belongs to a file", relativePath));
 						}
 					}
-					throw new FileNotFoundException("Navigate in git folder: folder not exist "+relativePath);
+					throw new FileNotFoundException(String.format("Git folder path %s not exist", relativePath));
 				}
 			}
 			

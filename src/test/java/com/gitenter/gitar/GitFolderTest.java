@@ -74,7 +74,7 @@ public class GitFolderTest {
 	public void testEmptyLocalFolderStructureFolderNotExist() throws FileNotFoundException {
 		
 		thrown.expect(FileNotFoundException.class);
-	    thrown.expectMessage("Navigate in local folder: folder not exist");
+	    thrown.expectMessage("Local folder path folder-not-exist not exist");
 	    workspaceWithEmptyFolderStructure.getFolder("folder-not-exist");
 	}
 	
@@ -82,7 +82,7 @@ public class GitFolderTest {
 	public void testEmptyHistoricalFolderStructureFolderNotExist() throws IOException {
 		
 		thrown.expect(IOException.class);
-	    thrown.expectMessage("Navigate in git folder: folder not exist");
+	    thrown.expectMessage("Git folder path folder-not-exist not exist");
 	    commitWithEmptyFolderStructure.getFolder("folder-not-exist");
 	}
 	
@@ -90,19 +90,22 @@ public class GitFolderTest {
 	public void testEmptyLocalFolderFileNotExist() throws FileNotFoundException {
 		
 		thrown.expect(FileNotFoundException.class);
-	    thrown.expectMessage("Navigate in local file: file not exist");
-	    workspaceWithFileOnRoot.getRoot().getFile("file-not-exist");
+	    thrown.expectMessage("Local file path ./file-not-exist not exist");
+	    workspaceWithEmptyFolderStructure.getRoot().getFile("file-not-exist");
 	}
 	
-//	@Test 
-//	public void testEmptyHistoricalFolderFileNotExist() throws IOException {
-//		
-//		thrown.expect(FileNotFoundException.class);
-//	    thrown.expectMessage("Navigate in local file: file not exist");
-//	    commitWithEmptyFolderStructure.getRoot().getFile("file-not-exist");
-//	}
+	@Test 
+	public void testEmptyHistoricalFolderFileNotExist() throws IOException {
+		
+		/*
+		 * Exceptional condition cannot distinguish if it is a folder or a file.
+		 */
+		thrown.expect(FileNotFoundException.class);
+	    thrown.expectMessage("Git path ./file-not-exist not exist");
+	    commitWithEmptyFolderStructure.getRoot().getFile("file-not-exist");
+	}
 	
-	private void testFilesOnRootHelper(GitFolder folder) {
+	private void testFilesOnRootHelper(GitFolder folder) throws FileNotFoundException {
 		
 		assertEquals(folder.ls().size(), 2);
 		assertTrue(folder.hasSubpath("file-1"));
@@ -123,6 +126,22 @@ public class GitFolderTest {
 		
 		GitHistoricalFolder folder = commitWithFileOnRoot.getRoot();
 		testFilesOnRootHelper(folder);
+	}
+	
+	@Test 
+	public void testAccessLocalFileAsFolderOnRoot() throws FileNotFoundException {
+		
+		thrown.expect(FileNotFoundException.class);
+	    thrown.expectMessage("Local folder path ./file-1 belongs to a file");
+	    workspaceWithFileOnRoot.getRoot().cd("file-1");
+	}
+	
+	@Test 
+	public void testAccessHistoricalFileAsFolderOnRoot() throws IOException {
+		
+		thrown.expect(FileNotFoundException.class);
+	    thrown.expectMessage("Git folder path ./file-1 belongs to a file");
+	    commitWithFileOnRoot.getRoot().cd("file-1");
 	}
 	
 	private void testComplicatedFolderStructureOnRootHelper(GitFolder folder) throws FileNotFoundException {
@@ -190,7 +209,7 @@ public class GitFolderTest {
 	public void testComplicatedLocalFolderStructureGetFile() throws FileNotFoundException {
 		
 		thrown.expect(FileNotFoundException.class);
-	    thrown.expectMessage("Navigate in local folder: the provide relativePath belongs to a file");
+	    thrown.expectMessage("Local folder path top-level-folder/file-in-top-level-folder belongs to a file");
 	    workspaceWithComplicatedFolderStructure.getFolder("top-level-folder/file-in-top-level-folder");
 	}
 	
@@ -198,7 +217,7 @@ public class GitFolderTest {
 	public void testComplicatedHistoricalFolderStructureGetFile() throws IOException {
 		
 		thrown.expect(IOException.class);
-	    thrown.expectMessage("Navigate in git folder: the provide relativePath belongs to a file");
+	    thrown.expectMessage("Git folder path top-level-folder/file-in-top-level-folder belongs to a file");
 	    commitWithComplicatedFolderStructure.getFolder("top-level-folder/file-in-top-level-folder");
 	}
 	
@@ -206,7 +225,7 @@ public class GitFolderTest {
 	public void testComplicatedLocalFolderStructureTopLevelFolderNotExist() throws FileNotFoundException {
 		
 		thrown.expect(FileNotFoundException.class);
-	    thrown.expectMessage("Navigate in local folder: folder not exist");
+	    thrown.expectMessage("Local folder path top-level-folder-not-exist not exist");
 	    workspaceWithComplicatedFolderStructure.getFolder("top-level-folder-not-exist");
 	}
 	
@@ -214,7 +233,7 @@ public class GitFolderTest {
 	public void testComplicatedHistoricalFolderStructureTopLevelFolderNotExist() throws IOException {
 		
 		thrown.expect(IOException.class);
-	    thrown.expectMessage("Navigate in git folder: folder not exist");
+	    thrown.expectMessage("Git folder path top-level-folder-not-exist not exist");
 	    commitWithComplicatedFolderStructure.getFolder("top-level-folder-not-exist");
 	}
 	
@@ -222,7 +241,7 @@ public class GitFolderTest {
 	public void testComplicatedLocalFolderStructureSecondLevelFolderNotExist() throws FileNotFoundException {
 		
 		thrown.expect(FileNotFoundException.class);
-	    thrown.expectMessage("Navigate in local folder: folder not exist");
+	    thrown.expectMessage("Local folder path top-level-folder/second-level-folder-not-exist not exist");
 	    workspaceWithComplicatedFolderStructure.getFolder("top-level-folder/second-level-folder-not-exist");
 	}
 	
@@ -230,7 +249,7 @@ public class GitFolderTest {
 	public void testComplicatedHistoricalFolderStructureSecondLevelFolderNotExist() throws IOException {
 		
 		thrown.expect(IOException.class);
-	    thrown.expectMessage("Navigate in git folder: folder not exist");
+	    thrown.expectMessage("Git folder path top-level-folder/second-level-folder-not-exist not exist");
 	    commitWithComplicatedFolderStructure.getFolder("top-level-folder/second-level-folder-not-exist");
 	}
 	

@@ -14,10 +14,10 @@ public class GitLocalFile extends GitLocalPath implements GitFile {
 	GitLocalFile(GitWorkspace workspace, String relativePath) throws FileNotFoundException {
 		super(workspace, relativePath);
 		if (!this.exists()) {
-			throw new FileNotFoundException("Navigate in local file: file not exist");
+			throw new FileNotFoundException(String.format("Local file path %s not exist", relativePath));
 		}
 		if (this.isDirectory()) {
-			throw new FileNotFoundException("Navigate in local file: the provide relativePath belongs to a folder");
+			throw new FileNotFoundException(String.format("Local file path %s belongs to a folder", relativePath));
 		}
 	}
 	
