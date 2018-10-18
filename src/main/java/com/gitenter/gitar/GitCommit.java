@@ -18,7 +18,7 @@ public class GitCommit implements GitState {
 	 * This SHA value doesn't corresponding to any concrete commit, 
 	 * because it doesn't have the associated time/message/author/... 
 	 */
-	static final String EMPTY_SHA = "0000000000000000000000000000000000000000";
+	public static final String EMPTY_SHA = "0000000000000000000000000000000000000000";
 	
 	@Getter
 	private final Date timestamp;
