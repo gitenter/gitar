@@ -108,6 +108,9 @@ public abstract class GitRepository {
 				if (branchName.equals(ref.getName().split("/")[2])) {
 					return new GitBranch(this, branchName);
 				}
+				else if (branchName.equals(ref.getName())) {
+					return new GitBranch(this, branchName.split("/")[2]);
+				}
 			}
 		}
 		
@@ -165,6 +168,9 @@ public abstract class GitRepository {
 			for (Ref ref : call) {
 				if (tagName.equals(ref.getName().split("/")[2])) {
 					return new GitTag(this, tagName, ref.getObjectId()).downCasting();
+				}
+				else if (tagName.equals(ref.getName())) {
+					return new GitTag(this, tagName.split("/")[2], ref.getObjectId()).downCasting();
 				}
 			}
 		}

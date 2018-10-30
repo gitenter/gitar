@@ -42,6 +42,7 @@ public class GitTagTest {
 		repository.createTag("a-lightweight-tag");
 		assertTrue(repository.getTag("a-lightweight-tag") instanceof GitLightweightTag);
 		assertEquals(repository.getTag("a-lightweight-tag").getCommit().getSha(), commit.getSha());
+		assertEquals(repository.getTag("refs/tags/a-lightweight-tag").getCommit().getSha(), commit.getSha());
 		
 		repository.createTag("an-annotated-tag", "tag message");
 		assertTrue(repository.getTag("an-annotated-tag") instanceof GitAnnotatedTag);

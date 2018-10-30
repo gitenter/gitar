@@ -52,6 +52,7 @@ public class GitBranchTest {
 		assertEquals(currentBranch.getName(), "master");
 		assertEquals(repository.getBranches().size(), 0);
 		assertEquals(repository.getBranch("master"), null);
+		assertEquals(repository.getBranch("refs/heads/master"), null);
 		
 		GitWorkspace workspace = currentBranch.checkoutTo();
 		GitWorkspaceSetup.addACommit(workspace, "First commit message");
@@ -59,6 +60,7 @@ public class GitBranchTest {
 		assertEquals(currentBranch.getName(), "master");
 		assertEquals(repository.getBranches().size(), 1);
 		assertNotEquals(repository.getBranch("master"), null);
+		assertNotEquals(repository.getBranch("refs/heads/master"), null);
 	}
 
 	@Test
