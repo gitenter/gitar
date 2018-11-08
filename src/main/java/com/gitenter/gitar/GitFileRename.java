@@ -2,11 +2,11 @@ package com.gitenter.gitar;
 
 public class GitFileRename extends GitFileDiff {
 
-	GitFileRename(GitFileDiff fileDiff) {
-		super(fileDiff.jGitDiffEntry);
+	GitFileRename(GitFileDiff fileDiff, GitRepository repository) {
+		super(fileDiff.jGitDiffEntry, repository);
 	}
 
-	public String getOriginalPath() {
+	public String getOldPath() {
 		return jGitDiffEntry.getOldPath();
 	}
 	

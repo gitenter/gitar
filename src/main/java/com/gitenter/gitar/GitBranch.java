@@ -170,14 +170,7 @@ public class GitBranch {
 		List<GitFileDiff> fileDiffs = new ArrayList<GitFileDiff>();
 		List<DiffEntry> diff = repository.getJGitGit().diff().setOldTree(oldTreeParser).setNewTree(newTreeParser).call();
 		for (DiffEntry entry : diff) {
-			fileDiffs.add(new GitFileDiff(entry).downCasting());
-			System.out.println("Entry: " + entry);
-			System.out.println("=========");
-			try (DiffFormatter formatter = new DiffFormatter(System.out)) {
-				formatter.setRepository(repository.getJGitRepository());
-				formatter.format(entry);
-				System.out.println("~~~~~~~~~");
-			}
+			fileDiffs.add(new GitFileDiff(entry, repository).downCasting());
 		}
 		
 		return fileDiffs;

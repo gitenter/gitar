@@ -1,11 +1,9 @@
 package com.gitenter.gitar;
 
-import java.io.FilePermission;
-
 public class GitFileModify extends GitFileDiff {
 
-	GitFileModify(GitFileDiff fileDiff) {
-		super(fileDiff.jGitDiffEntry);
+	GitFileModify(GitFileDiff fileDiff, GitRepository repository) {
+		super(fileDiff.jGitDiffEntry, repository);
 	}
 
 	public String getPath() {

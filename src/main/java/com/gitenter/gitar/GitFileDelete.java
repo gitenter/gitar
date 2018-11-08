@@ -2,11 +2,11 @@ package com.gitenter.gitar;
 
 public class GitFileDelete extends GitFileDiff {
 
-	GitFileDelete(GitFileDiff fileDiff) {
-		super(fileDiff.jGitDiffEntry);
+	GitFileDelete(GitFileDiff fileDiff, GitRepository repository) {
+		super(fileDiff.jGitDiffEntry, repository);
 	}
 
-	public String getOriginalPath() {
+	public String getOldPath() {
 		return jGitDiffEntry.getOldPath();
 	}
 }
