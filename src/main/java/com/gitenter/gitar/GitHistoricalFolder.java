@@ -117,10 +117,6 @@ public class GitHistoricalFolder extends GitHistoricalPath implements GitFolder 
 			
 			boolean hasNext = treeWalk.next();
 			
-			for (int i = 0; i < 5; ++i) {
-				continue;
-			}
-			
 			/*
 			 * Iterate out the outside tree structure of the interested
 			 * folder (which only build on the subtree it rooted).
@@ -161,7 +157,6 @@ public class GitHistoricalFolder extends GitHistoricalPath implements GitFolder 
 		boolean hasNext;
 		
 		if (treeWalk.isSubtree()) {
-			
 			GitHistoricalFolder folder = new GitHistoricalFolder(commit, treeWalk.getPathString());
 			
 			int depth = treeWalk.getDepth();
@@ -176,7 +171,6 @@ public class GitHistoricalFolder extends GitHistoricalPath implements GitFolder 
 				hasNext = wrapper.hasNext;
 			}
 			
-			hasNext = treeWalk.next();
 			return new GitPathWrapper(folder, hasNext);
 		}
 		else {

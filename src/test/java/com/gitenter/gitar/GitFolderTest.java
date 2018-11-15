@@ -108,10 +108,10 @@ public class GitFolderTest {
 	private void testFilesOnRootHelper(GitFolder folder) throws FileNotFoundException {
 		
 		assertEquals(folder.ls().size(), 2);
-		assertTrue(folder.hasSubpath("file-1"));
-		assertTrue(folder.getSubpath("file-1") instanceof GitFile);
-		assertTrue(folder.hasSubpath("file-2"));
-		assertTrue(folder.getSubpath("file-2") instanceof GitFile);
+		assertTrue(folder.hasSubpath("file-on-root-1"));
+		assertTrue(folder.getSubpath("file-on-root-1") instanceof GitFile);
+		assertTrue(folder.hasSubpath("file-on-root-2"));
+		assertTrue(folder.getSubpath("file-on-root-2") instanceof GitFile);
 	}
 	
 	@Test
@@ -132,32 +132,43 @@ public class GitFolderTest {
 	public void testAccessLocalFileAsFolderOnRoot() throws FileNotFoundException {
 		
 		thrown.expect(FileNotFoundException.class);
-	    thrown.expectMessage("Local folder path ./file-1 belongs to a file");
-	    workspaceWithFileOnRoot.getRoot().cd("file-1");
+	    thrown.expectMessage("Local folder path ./file-on-root-1 belongs to a file");
+	    workspaceWithFileOnRoot.getRoot().cd("file-on-root-1");
 	}
 	
 	@Test 
 	public void testAccessHistoricalFileAsFolderOnRoot() throws IOException {
 		
 		thrown.expect(FileNotFoundException.class);
-	    thrown.expectMessage("Git folder path ./file-1 belongs to a file");
-	    commitWithFileOnRoot.getRoot().cd("file-1");
+	    thrown.expectMessage("Git folder path ./file-on-root-1 belongs to a file");
+	    commitWithFileOnRoot.getRoot().cd("file-on-root-1");
 	}
 	
 	private void testComplicatedFolderStructureOnRootHelper(GitFolder folder) throws FileNotFoundException {
 		
-		assertEquals(folder.ls().size(), 1);
-		assertTrue(folder.hasSubpath("top-level-folder"));
-		assertTrue(folder.getSubpath("top-level-folder") instanceof GitFolder);
+		assertEquals(folder.ls().size(), 3);
+		assertTrue(folder.hasSubpath("1-file-on-root-along-with-folders"));
+		assertTrue(folder.getSubpath("1-file-on-root-along-with-folders") instanceof GitFile);
+		assertTrue(folder.hasSubpath("2-top-level-folder"));
+		assertTrue(folder.getSubpath("2-top-level-folder") instanceof GitFolder);
+		assertTrue(folder.hasSubpath("3-file-on-root-along-with-folders"));
+		assertTrue(folder.getSubpath("3-file-on-root-along-with-folders") instanceof GitFile);
 		
-		GitFolder topLevelFolder = folder.cd("top-level-folder");
-		assertEquals(topLevelFolder.ls().size(), 2);
-		assertTrue(topLevelFolder.hasSubpath("file-in-top-level-folder"));
-		assertTrue(topLevelFolder.getSubpath("file-in-top-level-folder") instanceof GitFile);
-		assertTrue(topLevelFolder.hasSubpath("second-level-folder"));
-		assertTrue(topLevelFolder.getSubpath("second-level-folder") instanceof GitFolder);
+		GitFolder topLevelFolder = folder.cd("2-top-level-folder");
+		testComplicatedFolderStructureNestedFolder(topLevelFolder);
+	}
+	
+	private void testComplicatedFolderStructureNestedFolder(GitFolder topLevelFolder) throws FileNotFoundException {
 		
-		GitFolder secondLevelFolder = topLevelFolder.cd("second-level-folder");
+		assertEquals(topLevelFolder.ls().size(), 3);
+		assertTrue(topLevelFolder.hasSubpath("1-file-in-top-level-folder"));
+		assertTrue(topLevelFolder.getSubpath("1-file-in-top-level-folder") instanceof GitFile);
+		assertTrue(topLevelFolder.hasSubpath("2-second-level-folder"));
+		assertTrue(topLevelFolder.getSubpath("2-second-level-folder") instanceof GitFolder);
+		assertTrue(topLevelFolder.hasSubpath("3-file-in-top-level-folder"));
+		assertTrue(topLevelFolder.getSubpath("3-file-in-top-level-folder") instanceof GitFile);
+		
+		GitFolder secondLevelFolder = topLevelFolder.cd("2-second-level-folder");
 		assertEquals(secondLevelFolder.ls().size(), 1);
 		assertTrue(secondLevelFolder.hasSubpath("file-in-second-level-folder"));
 		assertTrue(secondLevelFolder.getSubpath("file-in-second-level-folder") instanceof GitFile);
@@ -177,31 +188,17 @@ public class GitFolderTest {
 		testComplicatedFolderStructureOnRootHelper(folder);
 	}
 	
-	private void testComplicatedFolderStructureNestedFolder(GitFolder folder) throws FileNotFoundException {
-		
-		assertEquals(folder.ls().size(), 2);
-		assertTrue(folder.hasSubpath("file-in-top-level-folder"));
-		assertTrue(folder.getSubpath("file-in-top-level-folder") instanceof GitFile);
-		assertTrue(folder.hasSubpath("second-level-folder"));
-		assertTrue(folder.getSubpath("second-level-folder") instanceof GitFolder);
-		
-		GitFolder secondLevelFolder = folder.cd("second-level-folder");
-		assertEquals(secondLevelFolder.ls().size(), 1);
-		assertTrue(secondLevelFolder.hasSubpath("file-in-second-level-folder"));
-		assertTrue(secondLevelFolder.getSubpath("file-in-second-level-folder") instanceof GitFile);
-	}
-	
 	@Test
 	public void testComplicatedLocalFolderStructureNestedFolder() throws IOException {
 		
-		GitLocalFolder folder = workspaceWithComplicatedFolderStructure.getFolder("top-level-folder");
+		GitLocalFolder folder = workspaceWithComplicatedFolderStructure.getFolder("2-top-level-folder");
 		testComplicatedFolderStructureNestedFolder(folder);
 	}
 	
 	@Test
 	public void testComplicatedHistoricalFolderStructureNestedFolder() throws IOException {
 	
-		GitHistoricalFolder folder = commitWithComplicatedFolderStructure.getFolder("top-level-folder");
+		GitHistoricalFolder folder = commitWithComplicatedFolderStructure.getFolder("2-top-level-folder");
 		testComplicatedFolderStructureNestedFolder(folder);
 	}
 
@@ -209,32 +206,32 @@ public class GitFolderTest {
 	public void testComplicatedLocalFolderStructureGetFolderAsFile() throws FileNotFoundException {
 		
 		thrown.expect(FileNotFoundException.class);
-	    thrown.expectMessage("Local file path ./top-level-folder belongs to a folder");
-	    workspaceWithComplicatedFolderStructure.getRoot().getFile("top-level-folder");
+	    thrown.expectMessage("Local file path ./2-top-level-folder belongs to a folder");
+	    workspaceWithComplicatedFolderStructure.getRoot().getFile("2-top-level-folder");
 	}
 	
 	@Test
 	public void testComplicatedHistoricalFolderStructureGetFolderAsFile() throws IOException {
 		
 		thrown.expect(IOException.class);
-	    thrown.expectMessage("Git file path ./top-level-folder belongs to a folder");
-	    commitWithComplicatedFolderStructure.getRoot().getFile("top-level-folder");
+	    thrown.expectMessage("Git file path ./2-top-level-folder belongs to a folder");
+	    commitWithComplicatedFolderStructure.getRoot().getFile("2-top-level-folder");
 	}
 	
 	@Test
 	public void testComplicatedLocalFolderStructureGetFileAsFolder() throws FileNotFoundException {
 		
 		thrown.expect(FileNotFoundException.class);
-	    thrown.expectMessage("Local folder path top-level-folder/file-in-top-level-folder belongs to a file");
-	    workspaceWithComplicatedFolderStructure.getFolder("top-level-folder/file-in-top-level-folder");
+	    thrown.expectMessage("Local folder path 2-top-level-folder/1-file-in-top-level-folder belongs to a file");
+	    workspaceWithComplicatedFolderStructure.getFolder("2-top-level-folder/1-file-in-top-level-folder");
 	}
 	
 	@Test
 	public void testComplicatedHistoricalFolderStructureGetFileAsFolder() throws IOException {
 		
 		thrown.expect(IOException.class);
-	    thrown.expectMessage("Git folder path top-level-folder/file-in-top-level-folder belongs to a file");
-	    commitWithComplicatedFolderStructure.getFolder("top-level-folder/file-in-top-level-folder");
+	    thrown.expectMessage("Git folder path 2-top-level-folder/1-file-in-top-level-folder belongs to a file");
+	    commitWithComplicatedFolderStructure.getFolder("2-top-level-folder/1-file-in-top-level-folder");
 	}
 	
 	@Test 

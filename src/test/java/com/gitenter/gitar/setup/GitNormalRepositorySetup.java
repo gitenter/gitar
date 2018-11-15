@@ -16,7 +16,7 @@ import com.gitenter.gitar.GitWorkspace;
 
 public class GitNormalRepositorySetup {
 	
-	private static File getDirectory(TemporaryFolder folder) throws IOException {
+	private static File getDistinguishableDirectory(TemporaryFolder folder) throws IOException {
 		
 		/*
 		 * Although temporary folders on different test will not mix together,
@@ -32,7 +32,7 @@ public class GitNormalRepositorySetup {
 	
 	public static GitNormalRepository getOneJustInitialized(TemporaryFolder folder) throws IOException, GitAPIException {
 		
-		File directory = getDirectory(folder);
+		File directory = getDistinguishableDirectory(folder);
 		return GitNormalRepository.getInstance(directory);
 	}
 	
@@ -52,7 +52,7 @@ public class GitNormalRepositorySetup {
 		GitNormalRepository repository = getOneJustInitialized(folder);
 		GitWorkspace workspace = repository.getCurrentBranch().checkoutTo();
 		
-		File file = folder.newFile("file");
+		File file = folder.newFile("only-file-on-root");
 		file.createNewFile();
 		GitWorkspaceSetup.add(workspace, file, "Add file");
 		
@@ -63,7 +63,7 @@ public class GitNormalRepositorySetup {
 	
 	public static File getOneFolderStructureOnly(TemporaryFolder folder) throws IOException, GitAPIException {
 		
-		File directory = getDirectory(folder);
+		File directory = getDistinguishableDirectory(folder);
 		
 		Git.init().setDirectory(directory).call();
 		assertTrue(new File(directory, ".git").isDirectory());
@@ -82,11 +82,11 @@ public class GitNormalRepositorySetup {
 		
 		File file;
 		
-		file = folder.newFile("file-1");
+		file = folder.newFile("file-on-root-1");
 		file.createNewFile();
 		GitWorkspaceSetup.add(workspace, file, "Add file-1");
 		
-		file = folder.newFile("file-2");
+		file = folder.newFile("file-on-root-2");
 		file.createNewFile();
 		GitWorkspaceSetup.add(workspace, file, "Add file-2");
 		
@@ -98,13 +98,24 @@ public class GitNormalRepositorySetup {
 		GitNormalRepository repository = getOneJustInitialized(folder);
 		GitWorkspace workspace = repository.getCurrentBranch().checkoutTo();
 		
-		File file;
+		/*
+		 * Need complicated prefix of 1,2,3 because the iteration depends
+		 * on the order of the file/folders.
+		 */
+		File file = folder.newFile("1-file-on-root-along-with-folders");
+		file.createNewFile();
+		GitWorkspaceSetup.add(workspace, file, "Add file");
 
-		file = folder.newFolder("top-level-folder");
-		new File(file, "file-in-top-level-folder").createNewFile();
-		new File(file, "second-level-folder").mkdir();
-		new File(new File(file, "second-level-folder"), "file-in-second-level-folder").createNewFile();
-		GitWorkspaceSetup.add(workspace, file, "Add folder structure");
+		File topLevelFolder = folder.newFolder("2-top-level-folder");
+		new File(topLevelFolder, "1-file-in-top-level-folder").createNewFile();
+		new File(topLevelFolder, "2-second-level-folder").mkdir();
+		new File(new File(topLevelFolder, "2-second-level-folder"), "file-in-second-level-folder").createNewFile();
+		new File(topLevelFolder, "3-file-in-top-level-folder").createNewFile();
+		GitWorkspaceSetup.add(workspace, topLevelFolder, "Add folder structure");
+		
+		file = folder.newFile("3-file-on-root-along-with-folders");
+		file.createNewFile();
+		GitWorkspaceSetup.add(workspace, file, "Add file");
 		
 		return repository;
 	}
