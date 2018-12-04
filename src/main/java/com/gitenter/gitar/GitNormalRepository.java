@@ -12,6 +12,8 @@ import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 
+import com.gitenter.gitar.exception.WrongGitDirectoryTypeException;
+
 public class GitNormalRepository extends GitRepository {
 	
 	private Map<String,GitRemote> remotes = new HashMap<String,GitRemote>();
@@ -24,11 +26,7 @@ public class GitNormalRepository extends GitRepository {
 		super(directory);
 		
 		if (isBareRepository()) {
-			/*
-			 * This part is not redundant, because the corresponding
-			 * bare repository may or may not in our lookup hashtable.
-			 */
-			throw new IOException("The provided directory is a bare git directory: "+directory);
+			throw new WrongGitDirectoryTypeException(directory, "normal");
 		}
 		else if (!isNormalRepository()) {
 			Git.init().setDirectory(directory).setBare(false).call();
@@ -52,11 +50,7 @@ public class GitNormalRepository extends GitRepository {
 				return (GitNormalRepository)repository;
 			}
 			else {
-				/*
-				 * TODO:
-				 * Consider throw a customized exception.
-				 */
-				throw new IOException("The provided directory is a bare git directory: "+directory);
+				throw new WrongGitDirectoryTypeException(directory, "normal");
 			}
 		}
 		else {

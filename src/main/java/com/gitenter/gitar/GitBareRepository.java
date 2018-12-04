@@ -8,6 +8,8 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
+import com.gitenter.gitar.exception.WrongGitDirectoryTypeException;
+
 public class GitBareRepository extends GitRepository {
 	
 	private Repository jGitRepository;
@@ -25,11 +27,7 @@ public class GitBareRepository extends GitRepository {
 		 */
 		
 		if (isNormalRepository()) {
-			/*
-			 * TODO:
-			 * Consider throw a customized exception.
-			 */
-			throw new IOException("The provided directory is a normal git directory: "+directory);
+			throw new WrongGitDirectoryTypeException(directory, "bare");
 		}
 		else if (!isBareRepository()) {
 			Git.init().setDirectory(directory).setBare(true).call();
@@ -46,11 +44,7 @@ public class GitBareRepository extends GitRepository {
 				return (GitBareRepository)repository;
 			}
 			else {
-				/*
-				 * TODO:
-				 * Consider throw a customized exception.
-				 */
-				throw new IOException("The provided directory is a normal git directory: "+directory);
+				throw new WrongGitDirectoryTypeException(directory, "bare");
 			}
 		}
 		else {
