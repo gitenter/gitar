@@ -11,6 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import com.gitenter.gitar.exception.WrongGitDirectoryTypeException;
 import com.gitenter.gitar.setup.GitBareRepositorySetup;
 import com.gitenter.gitar.setup.GitNormalRepositorySetup;
 
@@ -61,7 +62,7 @@ public class GitBareRepositoryTest {
 		GitBareRepository.getInstance(directory);
 	}
 	
-	@Test(expected = IOException.class)
+	@Test(expected = WrongGitDirectoryTypeException.class)
 	public void testRegisteredByRepoOfTheOtherType() throws IOException, GitAPIException {
 		
 		File directory = folder.newFolder("repo");
@@ -70,7 +71,7 @@ public class GitBareRepositoryTest {
 		GitBareRepository.getInstance(directory);
 	}
 	
-	@Test(expected = IOException.class)
+	@Test(expected = WrongGitDirectoryTypeException.class)
 	public void testExistingFolderIsRepoOfTheOtherType() throws IOException, GitAPIException {
 	
 		File directory = GitNormalRepositorySetup.getOneFolderStructureOnly(folder);
