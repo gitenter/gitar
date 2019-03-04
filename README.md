@@ -5,17 +5,12 @@
 
 `gitar` is an object-orient API wrapper on top of JGit.
 
-## Compile
+## Compile and Deployment
 
-Gitar can be compile on Java 8 and 10. Although `mvn clean install` can only work on Java 8, due to the reason that `maven-jar-plugin` is not supporting Java 10 yet.
-
-Mac:
+This repository should be compiled in Java 10/11 (notice that there's [no openjdk-10 but only has openjdk-11 on Ubuntu 18.04](https://askubuntu.com/questions/1037646/why-is-openjdk-10-packaged-as-openjdk-11)). The produced jar is compatible with Java 8+, which makes it Spring compatible (Spring only supports Java 8 yet).
 
 ```
-$ export JAVA_HOME=/Library/Java/Home
-$ mvn clean install
+mvn clean install
 ```
 
-## Deployment
-
-To make other sub-projects (`capsid` and various hooks) compilable, `mvn install` of this package to the `.m2` directory is needed.
+So then the local `.m2` directory will be updated.
