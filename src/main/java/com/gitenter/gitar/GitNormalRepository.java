@@ -33,6 +33,15 @@ public class GitNormalRepository extends GitRepository {
 		}
 	}
 	
+	/**
+	 * Factory method of this class. 
+	 * Identical inputs share the return value by following the singleton pattern.
+	 * 
+	 * @param directory the file directory of the Git repository
+	 * @return this class itself
+	 * @throws IOException
+	 * @throws GitAPIException
+	 */
 	public static GitNormalRepository getInstance(File directory) throws IOException, GitAPIException {
 		
 		if (instances.containsKey(directory)) {
