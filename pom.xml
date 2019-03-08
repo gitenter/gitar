@@ -10,6 +10,31 @@
 
 	<name>Gitar</name>
 	<description>An object-orient API wrapper on top of JGit</description>
+	<url>https://github.com/gitenter/gitar</url>
+	<licenses>
+		<license>
+			<name>The 3-Clause BSD License</name>
+			<url>https://opensource.org/licenses/BSD-3-Clause</url>
+		</license>
+	</licenses>
+	<organization>
+		<name>GitEnter</name>
+		<url>http://www.gitenter.com</url>
+	</organization>
+	<developers>
+		<developer>
+			<name>Cong-Xin Qiu</name>
+			<email>ozooxo@gmail.com</email>
+			<url>https://github.com/ozooxo</url>
+			<organization>GitEnter</organization>
+			<organizationUrl>http://www.gitenter.com</organizationUrl>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:git://github.com/gitenter/gitar.git</connection>
+		<developerConnection>scm:git:ssh://github.com:gitenter/gitar.git</developerConnection>
+		<url>https://github.com/gitenter/gitar/tree/master</url>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -22,6 +47,11 @@
 			<url>${project.baseUri}deploy</url>
 		</repository>
 	</distributionManagement>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/gitenter/gitar/issues</url>
+	</issueManagement>
 
 	<build>
 		<plugins>
