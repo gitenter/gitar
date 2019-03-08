@@ -16,6 +16,13 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
+	<distributionManagement>
+		<repository>
+			<id>dev</id>
+			<url>${project.baseUri}deploy</url>
+		</repository>
+	</distributionManagement>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -63,9 +70,13 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>3.0.0-M1</version>
+			</plugin>
 		</plugins>
 	</build>
-
 
 	<dependencies>
 		<!-- Compile -->

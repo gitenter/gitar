@@ -1,4 +1,5 @@
 target/
+deploy/
 .classpath
 .project
 .settings
