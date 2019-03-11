@@ -74,11 +74,11 @@ Open Source Software Repository Hosting (OSSRH): https://central.sonatype.org/pa
 Generating `.asc` files is basically
 
 ```
-$ cd deploy/com/gitenter/gitar/0.0.2-prototype/
-$ gpg -ab gitar-0.0.2-prototype.jar
-$ gpg -ab gitar-0.0.2-prototype.pom
-$ gpg -ab gitar-0.0.2-prototype-sources.jar
-$ gpg -ab gitar-0.0.2-prototype-javadoc.jar
+$ cd deploy/com/gitenter/gitar/[version]/
+$ gpg -ab gitar-[version].jar
+$ gpg -ab gitar-[version].pom
+$ gpg -ab gitar-[version]-sources.jar
+$ gpg -ab gitar-[version]-javadoc.jar
 ```
 
 but it can be automatic using `nexus-staging-maven-plugin` with `maven-gpg-plugin`.
@@ -113,7 +113,7 @@ Then
 [INFO] --- maven-gpg-plugin:1.5:sign (sign-artifacts) @ gitar ---
 [INFO]
 [INFO] --- maven-install-plugin:3.0.0-M1:install (default-install) @ gitar ---
-[INFO] Installing ~/Workspace/gitar/target/gitar-0.0.2-prototype.jar to ~/.m2/repository/com/gitenter/gitar/0.0.2-prototype/gitar-0.0.2-prototype.jar
+[INFO] Installing ~/Workspace/gitar/target/gitar-[version].jar to ~/.m2/repository/com/gitenter/gitar/[version]/gitar-[version].jar
 ...
 [INFO]
 [INFO] --- nexus-staging-maven-plugin:1.6.7:deploy (injected-nexus-deploy) @ gitar ---
@@ -121,17 +121,17 @@ Then
 [INFO]  + Using server credentials "ossrh" from Maven settings.
 [INFO]  * Connected to Nexus at https://oss.sonatype.org:443/, is version 2.14.11-01 and edition "Professional"
 [INFO]  * Using staging profile ID "a0db7f06860d88" (matched by Nexus).
-[INFO] Installing /Users/cynthia/Workspace/gitar/target/gitar-0.0.2-prototype.jar to /Users/cynthia/Workspace/gitar/target/nexus-staging/staging/a0db7f06860d88/com/gitenter/gitar/0.0.2-prototype/gitar-0.0.2-prototype.jar
+[INFO] Installing /Users/cynthia/Workspace/gitar/target/gitar-[version].jar to /Users/cynthia/Workspace/gitar/target/nexus-staging/staging/a0db7f06860d88/com/gitenter/gitar/[version]/gitar-[version].jar
 ...
-[INFO] Installing /Users/cynthia/Workspace/gitar/target/gitar-0.0.2-prototype-sources.jar.asc to /Users/cynthia/Workspace/gitar/target/nexus-staging/staging/a0db7f06860d88/com/gitenter/gitar/0.0.2-prototype/gitar-0.0.2-prototype-sources.jar.asc
+[INFO] Installing /Users/cynthia/Workspace/gitar/target/gitar-[version]-sources.jar.asc to /Users/cynthia/Workspace/gitar/target/nexus-staging/staging/a0db7f06860d88/com/gitenter/gitar/[version]/gitar-[version]-sources.jar.asc
 [INFO] Performing remote staging...
 [INFO]
 [INFO]  * Remote staging into staging profile ID "a0db7f06860d88"
 [INFO]  * Created staging repository with ID "comgitenter-1003".
 [INFO]  * Staging repository at https://oss.sonatype.org:443/service/local/staging/deployByRepositoryId/comgitenter-1003
 [INFO]  * Uploading locally staged artifacts to profile com.gitenter
-Uploading to ossrh: https://oss.sonatype.org:443/service/local/staging/deployByRepositoryId/comgitenter-1003/com/gitenter/gitar/0.0.2-prototype/gitar-0.0.2-prototype-sources.jar
-Uploaded to ossrh: https://oss.sonatype.org:443/service/local/staging/deployByRepositoryId/comgitenter-1003/com/gitenter/gitar/0.0.2-prototype/gitar-0.0.2-prototype-sources.jar (37 kB at 5.0 kB/s)
+Uploading to ossrh: https://oss.sonatype.org:443/service/local/staging/deployByRepositoryId/comgitenter-1003/com/gitenter/gitar/[version]/gitar-[version]-sources.jar
+Uploaded to ossrh: https://oss.sonatype.org:443/service/local/staging/deployByRepositoryId/comgitenter-1003/com/gitenter/gitar/[version]/gitar-[version]-sources.jar (37 kB at 5.0 kB/s)
 ...
 [INFO]  * Upload of locally staged artifacts finished.
 [INFO]  * Closing staging repository with ID "comgitenter-1003".
@@ -156,6 +156,6 @@ Waiting for operation to complete...
 
 It seems after that no need to do anything special through [this link](https://central.sonatype.org/pages/releasing-the-deployment.html). The repository is already in https://oss.sonatype.org/ and properly released.
 
-Repository URL for release download access: https://repo1.maven.org/maven2/com/gitenter/gitar/0.0.2-prototype/
+Repository URL for release download access: https://repo1.maven.org/maven2/com/gitenter/gitar/
 
-Repository group that contains snapshots and releases: https://repo1.maven.org/maven2/com/gitenter/gitar/0.0.2-prototype/
+Repository group that contains snapshots and releases: https://repo1.maven.org/maven2/com/gitenter/gitar/
