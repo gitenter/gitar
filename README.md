@@ -5,6 +5,16 @@
 
 `gitar` is an object-orient API wrapper on top of JGit.
 
+## Usage
+
+```
+<dependency>
+  <groupId>com.gitenter</groupId>
+  <artifactId>gitar</artifactId>
+  <version>0.0.2-prototype</version>
+</dependency>
+```
+
 ## Compile and Install
 
 This repository should be compiled in Java 10/11 (notice that there's [no openjdk-10 but only has openjdk-11 on Ubuntu 18.04](https://askubuntu.com/questions/1037646/why-is-openjdk-10-packaged-as-openjdk-11)). The produced jar is compatible with Java 8+, which makes it Spring compatible (Spring only supports Java 8 yet).
@@ -143,3 +153,9 @@ Waiting for operation to complete...
 [INFO] Finished at: 2019-03-11T06:57:58-04:00
 [INFO] ------------------------------------------------------------------------
 ```
+
+It seems after that no need to do anything special through [this link](https://central.sonatype.org/pages/releasing-the-deployment.html). The repository is already in https://oss.sonatype.org/ and properly released.
+
+Repository URL for release download access: https://repo1.maven.org/maven2/com/gitenter/gitar/0.0.2-prototype/
+
+Repository group that contains snapshots and releases: https://repo1.maven.org/maven2/com/gitenter/gitar/0.0.2-prototype/
