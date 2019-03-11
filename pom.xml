@@ -109,6 +109,10 @@
 				<artifactId>maven-deploy-plugin</artifactId>
 				<version>3.0.0-M1</version>
 			</plugin> -->
+			<!-- TODO:
+			     This breaks Travis CI `mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V`,
+			     with error `gpg: no default secret key: secret key not available`
+			     Temperarily disabled. As we are not really using CI tools for deployment (yet).
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
@@ -133,7 +137,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>-->
 		</plugins>
 	</build>
 
