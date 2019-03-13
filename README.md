@@ -161,3 +161,7 @@ It seems after that no need to do anything special through [this link](https://c
 Repository URL for release download access: https://repo1.maven.org/maven2/com/gitenter/gitar/
 
 Repository group that contains snapshots and releases: https://repo1.maven.org/maven2/com/gitenter/gitar/
+
+TODO:
+
+- [ ] This is a good post on deploying to central through CircleCI: https://alexecollins.com/migrating-to-circleci/
