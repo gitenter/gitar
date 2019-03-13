@@ -7,11 +7,13 @@
 
 ## Usage
 
+`gitar` is [in Maven Central](https://mvnrepository.com/artifact/com.gitenter/gitar) now.
+
 ```
 <dependency>
-  <groupId>com.gitenter</groupId>
-  <artifactId>gitar</artifactId>
-  <version>0.0.2-prototype</version>
+    <groupId>com.gitenter</groupId>
+    <artifactId>gitar</artifactId>
+    <version>0.0.2-prototype</version>
 </dependency>
 ```
 
