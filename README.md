@@ -17,7 +17,51 @@
 </dependency>
 ```
 
-## Compile and Install
+## Development
+
+### Prerequisites
+
+Needs to install:
+
+- Java
+- Maven
+- GnuPG
+
+Needs to have `~/.m2/settings.xml` to include OSSRH.
+
+```
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+	<servers>
+		<server>
+			<id>ossrh</id>
+			<username>ozooxo</username>
+			<password>...</password>
+		</server>
+	</servers>
+
+    <profiles>
+        <profile>
+            <id>ossrh</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <gpg.executable>gpg</gpg.executable>
+                <gpg.passphrase>...</gpg.passphrase>
+            </properties>
+        </profile>
+    </profiles>
+</settings>
+```
+
+TODO:
+
+- [ ] Dockerize the development environment.
+
+### Compile and Install
 
 This repository should be compiled in Java 10/11 (notice that there's [no openjdk-10 but only has openjdk-11 on Ubuntu 18.04](https://askubuntu.com/questions/1037646/why-is-openjdk-10-packaged-as-openjdk-11)). The produced jar is compatible with Java 8+, which makes it Spring compatible (Spring only supports Java 8 yet).
 
@@ -25,7 +69,7 @@ This repository should be compiled in Java 10/11 (notice that there's [no openjd
 mvn clean install
 ```
 
-## Deployment
+### Deployment
 
 ```
 mvn clean deploy
@@ -33,14 +77,14 @@ mvn clean deploy
 
 Then the result files will be in `/deploy` folder. (TODO: It seems I cannot specify repository-id which deployment location I want?)
 
-### Maven Central Repository
+#### Maven Central Repository
 
-#### Useful links
+##### Useful links
 
 - https://maven.apache.org/repository/guide-central-repository-upload.html
 - https://central.sonatype.org/pages/requirements.html
 
-#### GPG
+##### GPG
 
 ```
 brew install gnupg
@@ -69,7 +113,7 @@ $ gpg --keyserver keyserver-prod-fsn1-01.2ndquadrant.it --send-keys 1F42253DD11F
 $ gpg --keyserver keyserver-prod-fsn1-01.2ndquadrant.it --recv-keys 1F42253DD11F1E7718F35DACC6D9969E8A7371F8
 ```
 
-#### Hosting in/Deploy to OSSRH
+##### Hosting in/Deploy to OSSRH
 
 Open Source Software Repository Hosting (OSSRH): https://central.sonatype.org/pages/ossrh-guide.html
 
