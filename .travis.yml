@@ -3,5 +3,19 @@ jdk: openjdk10
 
 script: "mvn cobertura:cobertura"
 
+# Fix the error
+# > Execution default-cli of goal org.codehaus.mojo:cobertura-maven-plugin:2.7:instrument
+# > failed: Plugin org.codehaus.mojo:cobertura-maven-plugin:2.7 or one of its dependencies
+# > could not be resolved: Could not find artifact com.sun:tools:jar:0 at specified path
+# > /home/travis/openjdk10/../lib/tools.jar
+# https://github.com/mojohaus/cobertura-maven-plugin/issues/30
+# https://github.com/DataSecs/Hydra/pull/1/files#diff-354f30a63fb0907d4ad57269548329e3R18
+matrix:
+  exclude:
+  - os: osx
+    jdk: oraclejdk8
+  - os: osx
+    jdk: oraclejdk10
+
 after_success:
   - bash <(curl -s https://codecov.io/bash)
