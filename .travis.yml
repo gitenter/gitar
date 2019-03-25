@@ -1,5 +1,9 @@
 language: java
-jdk: openjdk11
+jdk:
+- oraclejdk8
+- oraclejdk10
+- openjdk11
+- openjdk-ea
 
 script: "mvn cobertura:cobertura"
 
