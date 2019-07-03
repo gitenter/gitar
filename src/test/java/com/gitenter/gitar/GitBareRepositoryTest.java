@@ -1,5 +1,6 @@
 package com.gitenter.gitar;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -18,13 +19,37 @@ import com.gitenter.gitar.setup.GitNormalRepositorySetup;
 public class GitBareRepositoryTest {
 	
 	@Rule public TemporaryFolder folder = new TemporaryFolder();
+
+	@Test
+	public void testAndDeleteOnNewFolderWhichDoesnotExistYet() throws IOException, GitAPIException {
+		
+		File sandbox = folder.newFolder("sandbox");
+		File directory = new File(sandbox, "repo.git");
+		assertFalse(directory.exists());
+		
+		GitBareRepository repository = GitBareRepository.getInstance(directory);
+		assertTrue(GitRepository.instances.containsKey(directory));
+		assertTrue(directory.exists());
+		assertTrue(new File(directory, "branches").isDirectory());
+		assertTrue(new File(directory, "hooks").isDirectory());
+		assertTrue(new File(directory, "logs").isDirectory());
+		assertTrue(new File(directory, "objects").isDirectory());
+		assertTrue(new File(directory, "refs").isDirectory());
+		assertTrue(new File(directory, "config").isFile());
+		assertTrue(new File(directory, "HEAD").isFile());
+		
+		GitRepository.delete(repository);
+		assertFalse(GitRepository.instances.containsKey(directory));
+		assertFalse(directory.exists());
+	}
 	
 	@Test
-	public void testInitOnNewFolder() throws IOException, GitAPIException {
+	public void testInitOnExistingEmptyFolder() throws IOException, GitAPIException {
 		
 		File directory = folder.newFolder("repo.git");
-		GitBareRepository.getInstance(directory);
+		assertTrue(directory.exists());
 		
+		GitBareRepository.getInstance(directory);
 		assertTrue(new File(directory, "branches").isDirectory());
 		assertTrue(new File(directory, "hooks").isDirectory());
 		assertTrue(new File(directory, "logs").isDirectory());

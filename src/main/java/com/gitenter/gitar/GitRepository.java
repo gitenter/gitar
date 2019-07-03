@@ -96,6 +96,13 @@ public abstract class GitRepository {
 		}
 	}
 	
+	public static void delete(GitRepository repository) throws IOException {
+		File directory = repository.getDirectory();
+		
+		instances.remove(directory);
+		FileUtils.deleteDirectory(directory);
+	}
+	
 	public GitCommit getCommit(String sha) throws IOException {
 		return new GitCommit(this, sha);
 	}

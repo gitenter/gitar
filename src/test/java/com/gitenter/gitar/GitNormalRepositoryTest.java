@@ -1,6 +1,7 @@
 package com.gitenter.gitar;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -21,11 +22,29 @@ public class GitNormalRepositoryTest {
 	@Rule public TemporaryFolder folder = new TemporaryFolder();
 	
 	@Test
-	public void testInitOnNewFolder() throws IOException, GitAPIException {
+	public void testInitAndDeleteOnNewFolderWhichDoesnotExistYet() throws IOException, GitAPIException {
+		
+		File sandbox = folder.newFolder("sandbox");
+		File directory = new File(sandbox, "repo");
+		assertFalse(directory.exists());
+		
+		GitNormalRepository repository = GitNormalRepository.getInstance(directory);
+		assertTrue(GitRepository.instances.containsKey(directory));
+		assertTrue(directory.exists());
+		assertTrue(new File(directory, ".git").isDirectory());
+		
+		GitRepository.delete(repository);
+		assertFalse(GitRepository.instances.containsKey(directory));
+		assertFalse(directory.exists());
+	}
+	
+	@Test
+	public void testInitOnExistingEmptyFolder() throws IOException, GitAPIException {
 		
 		File directory = folder.newFolder("repo");
-		GitNormalRepository.getInstance(directory);
+		assertTrue(directory.exists());
 		
+		GitNormalRepository.getInstance(directory);
 		assertTrue(new File(directory, ".git").isDirectory());
 	}
 	
