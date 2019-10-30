@@ -1,29 +1,28 @@
 package com.gitenter.gitar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import com.gitenter.gitar.setup.GitBareRepositorySetup;
 import com.gitenter.gitar.setup.GitNormalRepositorySetup;
 import com.gitenter.gitar.setup.GitWorkspaceSetup;
 
 public class GitBranchTest {
-	
-	@Rule public TemporaryFolder folder = new TemporaryFolder();
 
 	@Test
-	public void testBranchNotExist() throws IOException, GitAPIException {
+	public void testBranchNotExist(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(tmpFolder);
 		assertEquals(repository.getBranch("branch-not-exist"), null);
 	}
 	
@@ -37,16 +36,20 @@ public class GitBranchTest {
 	 * Should correct the difference later, and/or define customized
 	 * classes in here.
 	 */
-	@Test(expected = RefNotFoundException.class)
-	public void testCreateBranchEmptyNormalRepository() throws IOException, GitAPIException {
-		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
-		repository.createBranch("a-branch");
+	@Test
+	public void testCreateBranchEmptyNormalRepository(@TempDir File tmpFolder) throws IOException, GitAPIException {
+		
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(tmpFolder);
+		
+		assertThrows(RefNotFoundException.class, () -> {
+			repository.createBranch("a-branch");
+		});
 	}
 	
 	@Test
-	public void testCheckoutToFirstCommit() throws IOException, GitAPIException {
+	public void testCheckoutToFirstCommit(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(tmpFolder);
 		
 		GitNormalBranch currentBranch = repository.getCurrentBranch();
 		assertEquals(currentBranch.getName(), "master");
@@ -64,9 +67,9 @@ public class GitBranchTest {
 	}
 
 	@Test
-	public void testSwitchBetweenMultipleBranchesNormalRepository() throws IOException, GitAPIException {
+	public void testSwitchBetweenMultipleBranchesNormalRepository(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithCommit(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithCommit(tmpFolder);
 		
 		repository.createBranch("a-branch");
 		repository.createBranch("another-branch");
@@ -84,9 +87,9 @@ public class GitBranchTest {
 	}
 	
 	@Test
-	public void testCreateBranchBareRepository() throws IOException, GitAPIException {
+	public void testCreateBranchBareRepository(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		GitBareRepository repository = GitBareRepositorySetup.getOneWithCommit(folder);
+		GitBareRepository repository = GitBareRepositorySetup.getOneWithCommit(tmpFolder);
 		
 		assertEquals(repository.getBranches().size(), 1);
 		assertNotEquals(repository.getBranch("master"), null);
@@ -100,9 +103,9 @@ public class GitBranchTest {
 	}
 	
 	@Test
-	public void testGetLogNormalRepository() throws IOException, GitAPIException {
+	public void testGetLogNormalRepository(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(tmpFolder);
 		
 		GitNormalBranch master = repository.getCurrentBranch();
 		GitWorkspace workspace = master.checkoutTo();
@@ -140,9 +143,9 @@ public class GitBranchTest {
 	}
 	
 	@Test
-	public void testExistCommitEvenEmptyFolderStructureShaNotEmpty() throws IOException, GitAPIException {
+	public void testExistCommitEvenEmptyFolderStructureShaNotEmpty(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithCleanWorkspace(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithCleanWorkspace(tmpFolder);
 		GitCommit commit = repository.getCurrentBranch().getHead();
 		assertNotEquals(commit.getSha(), GitCommit.EMPTY_SHA);
 	}

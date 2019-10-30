@@ -41,6 +41,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <jgit-version>5.5.1.201910021850-r</jgit-version>
+        <junit-version>5.5.2</junit-version>
     </properties>
 
     <distributionManagement>
@@ -196,9 +197,15 @@
 
         <!-- Test -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit-version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

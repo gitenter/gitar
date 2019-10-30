@@ -1,6 +1,7 @@
 package com.gitenter.gitar.util;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,18 +10,16 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class JGitTest {
 
-	@Rule public TemporaryFolder folder = new TemporaryFolder();
-	
 	@Test
-	public void testAddAndCommit() throws IOException, IllegalStateException, GitAPIException {
+	public void testAddAndCommit(@TempDir File tmpFolder) throws IOException, IllegalStateException, GitAPIException {
 
-		File directory = folder.newFolder("repo");
+		File directory = new File(tmpFolder, "repo");
+		directory.mkdir();
 		Git.init().setDirectory(directory).setBare(false).call();
 
 		new File(directory, "a-file").createNewFile();
@@ -35,9 +34,10 @@ public class JGitTest {
 	}
 
 	@Test
-	public void testBuilder() throws IOException, GitAPIException {
+	public void testBuilder(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		File directory = folder.newFolder("repo");
+		File directory = new File(tmpFolder, "repo");
+		directory.mkdir();
 		
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		Repository repository = builder.setGitDir(directory).readEnvironment().findGitDir().build();
@@ -46,9 +46,10 @@ public class JGitTest {
 	}
 	
 	@Test
-	public void testJGitRepository()  throws IOException, GitAPIException {
+	public void testJGitRepository(@TempDir File tmpFolder)  throws IOException, GitAPIException {
 		
-		File directory = folder.newFolder("repo");
+		File directory = new File(tmpFolder, "repo");
+		directory.mkdir();
 		Git.init().setDirectory(directory).setBare(false).call();
 		
 		new File(directory, "a-file").createNewFile();

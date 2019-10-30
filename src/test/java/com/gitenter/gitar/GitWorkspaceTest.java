@@ -1,25 +1,23 @@
 package com.gitenter.gitar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import com.gitenter.gitar.setup.GitNormalRepositorySetup;
 
 public class GitWorkspaceTest {
 
-	@Rule public TemporaryFolder folder = new TemporaryFolder();
-	
 	@Test
-	public void testWorkspaceChangesBranchAfterCheckout() throws IOException, GitAPIException {
+	public void testWorkspaceChangesBranchAfterCheckout(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithCommit(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithCommit(tmpFolder);
 		GitNormalBranch master = repository.getCurrentBranch();
 		GitWorkspace workspace = master.checkoutTo();
 		assertEquals(workspace.getBranch().getName(), "master");
@@ -31,10 +29,10 @@ public class GitWorkspaceTest {
 	}
 	
 	@Test
-	public void testDifferentRepositoriesDontShareWorkspace() throws IOException, GitAPIException {
+	public void testDifferentRepositoriesDontShareWorkspace(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		GitNormalRepository repository1 = GitNormalRepositorySetup.getOneWithCommit(folder);
-		GitNormalRepository repository2 = GitNormalRepositorySetup.getOneWithCommit(folder);
+		GitNormalRepository repository1 = GitNormalRepositorySetup.getOneWithCommit(tmpFolder);
+		GitNormalRepository repository2 = GitNormalRepositorySetup.getOneWithCommit(tmpFolder);
 		
 		repository1.createBranch("repository-1-branch");
 		repository2.createBranch("repository-2-branch");

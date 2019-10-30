@@ -1,29 +1,24 @@
 package com.gitenter.gitar;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import com.gitenter.gitar.GitCommit;
-import com.gitenter.gitar.GitNormalRepository;
-import com.gitenter.gitar.GitWorkspace;
 import com.gitenter.gitar.setup.GitNormalRepositorySetup;
 import com.gitenter.gitar.setup.GitWorkspaceSetup;
 
 public class GitCommitTest {
-	
-	@Rule public TemporaryFolder folder = new TemporaryFolder();
 
 	@Test
-	public void testCommitInfomation() throws IOException, GitAPIException, NoSuchFieldException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public void testCommitInfomation(@TempDir File tmpFolder) throws IOException, GitAPIException, NoSuchFieldException, NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		
-		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(tmpFolder);
 		
 		GitWorkspace workspace = repository.getCurrentBranch().checkoutTo();
 		GitWorkspaceSetup.addACommit(workspace, "First commit message");
