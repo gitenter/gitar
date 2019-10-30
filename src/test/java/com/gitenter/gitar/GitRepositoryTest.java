@@ -1,25 +1,20 @@
 package com.gitenter.gitar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class GitRepositoryTest {
-	
-	@Rule public TemporaryFolder folder = new TemporaryFolder();
 
 	@Test
-	public void testBuild() throws IOException {
-		
-		File directory = folder.newFolder("repo");
+	public void testBuild(@TempDir File directory) throws IOException {
 		
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		Repository jGitRepository = builder.setGitDir(directory).readEnvironment().findGitDir().build();

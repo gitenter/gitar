@@ -1,39 +1,29 @@
 package com.gitenter.gitar.util;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class TemperaryFolderTest {
 
-	@Rule public TemporaryFolder folder = new TemporaryFolder();
-	
 	@Test
-	public void testMakeNewFolder() throws IOException {
+	public void testMakeNewFolder(@TempDir File tmpFolder) throws IOException {
 		
 		File directory = new File("/path/not/exist");
 		assertFalse(directory.exists());
-		directory = folder.newFolder("folder-name");
+		directory = new File(tmpFolder, "subfolder");
+		assertFalse(directory.exists());
+		directory.mkdir();
 		assertTrue(directory.exists());
 		
 		File file = new File(directory, "nested-file");
 		assertFalse(file.exists());
 		file.createNewFile();
 		assertTrue(file.exists());
-	}
-
-	@Test
-	public void testFilesInTemperaryFolderWillNotMixTogether() throws IOException {
-		
-		File directory = new File("/path/not/exist");
-		directory = folder.newFolder("folder-name");
-		
-		File file = new File(directory, "nested-file");
-		assertFalse(file.exists());
 	}
 }

@@ -1,17 +1,17 @@
 package com.gitenter.gitar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import com.gitenter.gitar.exception.WrongGitDirectoryTypeException;
 import com.gitenter.gitar.setup.GitBareRepositorySetup;
@@ -19,13 +19,10 @@ import com.gitenter.gitar.setup.GitNormalRepositorySetup;
 
 public class GitNormalRepositoryTest {
 	
-	@Rule public TemporaryFolder folder = new TemporaryFolder();
-	
 	@Test
-	public void testInitAndDeleteOnNewFolderWhichDoesnotExistYet() throws IOException, GitAPIException {
+	public void testInitAndDeleteOnNewFolderWhichDoesnotExistYet(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		File sandbox = folder.newFolder("sandbox");
-		File directory = new File(sandbox, "repo");
+		File directory = new File(tmpFolder, "repo");
 		assertFalse(directory.exists());
 		
 		GitNormalRepository repository = GitNormalRepository.getInstance(directory);
@@ -39,9 +36,10 @@ public class GitNormalRepositoryTest {
 	}
 	
 	@Test
-	public void testInitOnExistingEmptyFolder() throws IOException, GitAPIException {
+	public void testInitOnExistingEmptyFolder(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		File directory = folder.newFolder("repo");
+		File directory = new File(tmpFolder, "repo");
+		directory.mkdir();
 		assertTrue(directory.exists());
 		
 		GitNormalRepository.getInstance(directory);
@@ -49,9 +47,9 @@ public class GitNormalRepositoryTest {
 	}
 	
 	@Test
-	public void testGetInstanceOnExistingGitFolder() throws IOException, GitAPIException {
+	public void testGetInstanceOnExistingGitFolder(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		File directory = GitNormalRepositorySetup.getOneFolderStructureOnly(folder);
+		File directory = GitNormalRepositorySetup.getOneFolderStructureOnly(tmpFolder);
 		
 		/*
 		 * TODO:
@@ -60,51 +58,65 @@ public class GitNormalRepositoryTest {
 		GitNormalRepository.getInstance(directory);
 	}
 	
-	@Test(expected = JGitInternalException.class)
+	@Test
 	public void testInitFolderNotExist() throws IOException, GitAPIException {
 		
 		File directory = new File("/a/path/which/does/not/exist");
-		GitNormalRepository.getInstance(directory);
+		
+		assertThrows(JGitInternalException.class, () -> {
+			GitNormalRepository.getInstance(directory);
+		});
 	}
 	
-	@Test(expected = JGitInternalException.class)
-	public void testInitFolderReadOnly() throws IOException, GitAPIException {
+	@Test
+	public void testInitFolderReadOnly(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		File directory = folder.newFolder("repo");
+		File directory = new File(tmpFolder, "repo");
+		directory.mkdir();
 		directory.setReadOnly();
 		
-		GitNormalRepository.getInstance(directory);
+		assertThrows(JGitInternalException.class, () -> {
+			GitNormalRepository.getInstance(directory);
+		});
 	}
 	
-	public void testDirectoryRegisteredMultipleTimes() throws IOException, GitAPIException {
+	public void testDirectoryRegisteredMultipleTimes(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		File directory = folder.newFolder("repo");
+		File directory = new File(tmpFolder, "repo");
+		directory.mkdir();
 		GitNormalRepository repository1 = GitNormalRepository.getInstance(directory);
 		GitNormalRepository repository2 = GitNormalRepository.getInstance(directory);
 		
 		assertTrue(repository1 == repository2);
 	}
 	
-	@Test(expected = WrongGitDirectoryTypeException.class)
-	public void testRegisteredByRepoOfTheOtherType() throws IOException, GitAPIException {
+	@Test
+	public void testRegisteredByRepoOfTheOtherType(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		File directory = folder.newFolder("repo.git");
+		File directory = new File(tmpFolder, "repo.git");
+		directory.mkdir();
 		
 		GitBareRepository.getInstance(directory);
-		GitNormalRepository.getInstance(directory);
-	}
-	
-	@Test(expected = WrongGitDirectoryTypeException.class)
-	public void testExistingFolderIsRepoOfTheOtherType() throws IOException, GitAPIException {
-	
-		File directory = GitBareRepositorySetup.getOneFolderStructureOnly(folder);
-		GitNormalRepository.getInstance(directory);
+		
+		assertThrows(WrongGitDirectoryTypeException.class, () -> {
+			GitNormalRepository.getInstance(directory);
+		});
 	}
 	
 	@Test
-	public void testCreateAndUpdateAndGetRemote() throws IOException, GitAPIException {
+	public void testExistingFolderIsRepoOfTheOtherType(@TempDir File tmpFolder) throws IOException, GitAPIException {
 	
-		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
+		File directory = GitBareRepositorySetup.getOneFolderStructureOnly(tmpFolder);
+		
+		assertThrows(WrongGitDirectoryTypeException.class, () -> {
+			GitNormalRepository.getInstance(directory);
+		});
+	}
+	
+	@Test
+	public void testCreateAndUpdateAndGetRemote(@TempDir File tmpFolder) throws IOException, GitAPIException {
+	
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(tmpFolder);
 		
 		repository.createOrUpdateRemote("origin", "/fake/url");
 		GitRemote origin = repository.getRemote("origin");

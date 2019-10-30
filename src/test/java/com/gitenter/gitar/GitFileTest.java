@@ -1,38 +1,30 @@
 package com.gitenter.gitar;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import com.gitenter.gitar.GitCommit;
-import com.gitenter.gitar.GitHistoricalFile;
-import com.gitenter.gitar.GitHistoricalFolder;
-import com.gitenter.gitar.GitNormalRepository;
-import com.gitenter.gitar.GitWorkspace;
 import com.gitenter.gitar.setup.GitNormalRepositorySetup;
 import com.gitenter.gitar.setup.GitWorkspaceSetup;
 
 public class GitFileTest {
 	
-	@Rule public TemporaryFolder folder = new TemporaryFolder();
-	
 	@Test
-	public void testGetBlobContent() throws IOException, GitAPIException {
+	public void testGetBlobContent(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
 		String fileRelativePath = "file";
 		String fileContent = "file content";
 		
-		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(tmpFolder);
 		GitWorkspace workspace = repository.getCurrentBranch().checkoutTo();
 		
-		File file = folder.newFile(fileRelativePath);
+		File file = new File(tmpFolder, fileRelativePath);
 		file.createNewFile();
 		FileWriter writer = new FileWriter(file);
 		writer.write(fileContent);
@@ -49,9 +41,9 @@ public class GitFileTest {
 	}
 	
 	@Test
-	public void testMimeTypes() throws IOException, GitAPIException {
+	public void testMimeTypes(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(tmpFolder);
 		GitWorkspace workspace = repository.getCurrentBranch().checkoutTo();
 		
 		ClassLoader classLoader = getClass().getClassLoader();

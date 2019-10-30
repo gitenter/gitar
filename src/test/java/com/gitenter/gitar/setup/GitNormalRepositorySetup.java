@@ -1,6 +1,6 @@
 package com.gitenter.gitar.setup;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,7 +8,6 @@ import java.util.Random;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.junit.rules.TemporaryFolder;
 
 import com.gitenter.gitar.GitNormalBranch;
 import com.gitenter.gitar.GitNormalRepository;
@@ -16,7 +15,7 @@ import com.gitenter.gitar.GitWorkspace;
 
 public class GitNormalRepositorySetup {
 	
-	private static File getDistinguishableDirectory(TemporaryFolder folder) throws IOException {
+	private static File getRepositoryDirectory(File tmpFolder) throws IOException {
 		
 		/*
 		 * Although temporary folders on different test will not mix together,
@@ -27,18 +26,21 @@ public class GitNormalRepositorySetup {
 		Random rand = new Random();
 		String name = "repo-"+String.valueOf(rand.nextInt(Integer.MAX_VALUE));
 		
-		return folder.newFolder(name);
+		File repositoryDirectory = new File(tmpFolder, name);
+		repositoryDirectory.mkdir();
+		
+		return repositoryDirectory;
 	}
 	
-	public static GitNormalRepository getOneJustInitialized(TemporaryFolder folder) throws IOException, GitAPIException {
+	public static GitNormalRepository getOneJustInitialized(File tmpFolder) throws IOException, GitAPIException {
 		
-		File directory = getDistinguishableDirectory(folder);
-		return GitNormalRepository.getInstance(directory);
+		File repositoryDirectory = getRepositoryDirectory(tmpFolder);
+		return GitNormalRepository.getInstance(repositoryDirectory);
 	}
 	
-	public static GitNormalRepository getOneWithCommit(TemporaryFolder folder) throws IOException, GitAPIException {
+	public static GitNormalRepository getOneWithCommit(File tmpFolder) throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = getOneJustInitialized(folder);
+		GitNormalRepository repository = getOneJustInitialized(tmpFolder);
 		
 		GitNormalBranch master = repository.getCurrentBranch();
 		GitWorkspace workspace = master.checkoutTo();
@@ -47,12 +49,12 @@ public class GitNormalRepositorySetup {
 		return repository;
 	}
 	
-	public static GitNormalRepository getOneWithCleanWorkspace(TemporaryFolder folder) throws IOException, GitAPIException {
+	public static GitNormalRepository getOneWithCleanWorkspace(File tmpFolder) throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = getOneJustInitialized(folder);
+		GitNormalRepository repository = getOneJustInitialized(tmpFolder);
 		GitWorkspace workspace = repository.getCurrentBranch().checkoutTo();
 		
-		File file = folder.newFile("only-file-on-root");
+		File file = new File(tmpFolder, "only-file-on-root");
 		file.createNewFile();
 		GitWorkspaceSetup.add(workspace, file, "Add file");
 		
@@ -61,9 +63,9 @@ public class GitNormalRepositorySetup {
 		return repository;
 	}
 	
-	public static File getOneFolderStructureOnly(TemporaryFolder folder) throws IOException, GitAPIException {
+	public static File getOneFolderStructureOnly(File tmpFolder) throws IOException, GitAPIException {
 		
-		File directory = getDistinguishableDirectory(folder);
+		File directory = getRepositoryDirectory(tmpFolder);
 		
 		Git.init().setDirectory(directory).call();
 		assertTrue(new File(directory, ".git").isDirectory());
@@ -75,45 +77,46 @@ public class GitNormalRepositorySetup {
 	 * This classes are only used by Git*FolderTest. We use static method rather than
 	 * test case class inheritance to reduce confusing while eliminating duplicated code.
 	 */
-	public static GitNormalRepository getOneWithFileOnRoot(TemporaryFolder folder) throws IOException, GitAPIException {
+	public static GitNormalRepository getOneWithFileOnRoot(File tmpFolder) throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = getOneJustInitialized(folder);
+		GitNormalRepository repository = getOneJustInitialized(tmpFolder);
 		GitWorkspace workspace = repository.getCurrentBranch().checkoutTo();
 		
 		File file;
 		
-		file = folder.newFile("file-on-root-1");
+		file = new File(tmpFolder, "file-on-root-1");
 		file.createNewFile();
 		GitWorkspaceSetup.add(workspace, file, "Add file-1");
 		
-		file = folder.newFile("file-on-root-2");
+		file = new File(tmpFolder, "file-on-root-2");
 		file.createNewFile();
 		GitWorkspaceSetup.add(workspace, file, "Add file-2");
 		
 		return repository;
 	}
 	
-	public static GitNormalRepository getOneWithComplicatedFolderStructure(TemporaryFolder folder) throws IOException, GitAPIException {
+	public static GitNormalRepository getOneWithComplicatedFolderStructure(File tmpFolder) throws IOException, GitAPIException {
 
-		GitNormalRepository repository = getOneJustInitialized(folder);
+		GitNormalRepository repository = getOneJustInitialized(tmpFolder);
 		GitWorkspace workspace = repository.getCurrentBranch().checkoutTo();
 		
 		/*
 		 * Need complicated prefix of 1,2,3 because the iteration depends
 		 * on the order of the file/folders.
 		 */
-		File file = folder.newFile("1-file-on-root-along-with-folders");
+		File file = new File(tmpFolder, "1-file-on-root-along-with-folders");
 		file.createNewFile();
 		GitWorkspaceSetup.add(workspace, file, "Add file");
 
-		File topLevelFolder = folder.newFolder("2-top-level-folder");
+		File topLevelFolder = new File(tmpFolder, "2-top-level-folder");
+		topLevelFolder.mkdir();
 		new File(topLevelFolder, "1-file-in-top-level-folder").createNewFile();
 		new File(topLevelFolder, "2-second-level-folder").mkdir();
 		new File(new File(topLevelFolder, "2-second-level-folder"), "file-in-second-level-folder").createNewFile();
 		new File(topLevelFolder, "3-file-in-top-level-folder").createNewFile();
 		GitWorkspaceSetup.add(workspace, topLevelFolder, "Add folder structure");
 		
-		file = folder.newFile("3-file-on-root-along-with-folders");
+		file = new File(tmpFolder, "3-file-on-root-along-with-folders");
 		file.createNewFile();
 		GitWorkspaceSetup.add(workspace, file, "Add file");
 		

@@ -1,42 +1,43 @@
 package com.gitenter.gitar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import com.gitenter.gitar.GitAnnotatedTag;
-import com.gitenter.gitar.GitLightweightTag;
-import com.gitenter.gitar.GitNormalRepository;
 import com.gitenter.gitar.setup.GitNormalRepositorySetup;
 
 public class GitTagTest {
 	
-	@Rule public TemporaryFolder folder = new TemporaryFolder();
-	
 	@Test
-	public void testTagNotExist() throws IOException, GitAPIException {
-		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
+	public void testTagNotExist(@TempDir File tmpFolder) throws IOException, GitAPIException {
+		
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(tmpFolder);
 		assertEquals(repository.getTag("tag-not-exist"), null);
 	}
 
-	@Test(expected = NoHeadException.class)
-	public void testCreateTagEmptyNormalRepository() throws IOException, GitAPIException {
-		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(folder);
-		repository.createTag("a-tag");
+	@Test
+	public void testCreateTagEmptyNormalRepository(@TempDir File tmpFolder) throws IOException, GitAPIException {
+		
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneJustInitialized(tmpFolder);
+		
+		assertThrows(NoHeadException.class, () -> {
+			repository.createTag("a-tag");
+		});
 	}
 	
 	@Test
-	public void testCreateAndGetTagNormalRepository() throws IOException, GitAPIException {
+	public void testCreateAndGetTagNormalRepository(@TempDir File tmpFolder) throws IOException, GitAPIException {
 		
-		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithCommit(folder);
+		GitNormalRepository repository = GitNormalRepositorySetup.getOneWithCommit(tmpFolder);
 		GitCommit commit = repository.getCurrentBranch().getHead();
 		
 		repository.createTag("a-lightweight-tag");
