@@ -13,7 +13,7 @@
 <dependency>
     <groupId>com.gitenter</groupId>
     <artifactId>gitar</artifactId>
-    <version>0.0.3-prototype</version>
+    <version>0.0.4-prototype</version>
 </dependency>
 ```
 

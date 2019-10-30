@@ -5,7 +5,7 @@
 
     <groupId>com.gitenter</groupId>
     <artifactId>gitar</artifactId>
-    <version>0.0.4-prototype</version>
+    <version>0.0.5-prototype</version>
     <packaging>jar</packaging>
 
     <name>Gitar</name>
